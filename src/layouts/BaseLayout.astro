@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import AnalyticsConsentBanner from '../components/AnalyticsConsentBanner.astro';
 
 interface Props {
   title: string;
@@ -18,6 +19,17 @@ const {
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://word-base-landing.pages.dev';
 const canonicalUrl = canonical ?? `${siteUrl}${Astro.url.pathname}`;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+
+// Analytics IDs — support both VITE_* (legacy/shared) and PUBLIC_* (Astro) prefixes.
+// In Astro frontmatter (server-side), import.meta.env exposes all env vars.
+const gaId =
+  import.meta.env.VITE_GA_MEASUREMENT_ID ||
+  import.meta.env.PUBLIC_GA_MEASUREMENT_ID ||
+  '';
+const clarityId =
+  import.meta.env.VITE_CLARITY_PROJECT_ID ||
+  import.meta.env.PUBLIC_CLARITY_PROJECT_ID ||
+  '';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -90,8 +102,239 @@ const jsonLd = {
         } catch (e) {}
       })();
     </script>
+
+    <!--
+      Analytics loader — ported from shared/lib/analytics.ts
+      Consent-aware: GA4 + Clarity only load when user grants consent.
+      Default consent mode is "denied" to comply with privacy regulations.
+    -->
+    <script is:inline define:vars={{ gaId, clarityId }}>
+      (function () {
+        var CONSENT_KEY = 'wordbase_analytics_consent';
+        var _initialized = false;
+        var _storageListenerInstalled = false;
+
+        function getConsent() {
+          try {
+            var v = localStorage.getItem(CONSENT_KEY);
+            if (v === 'granted' || v === 'denied') return v;
+          } catch (e) {}
+          return null;
+        }
+
+        function _deleteAnalyticsCookies() {
+          if (typeof document === 'undefined') return;
+          var prefixes = ['_ga', '_clck', '_clsk', 'CLID', 'ANONCHK', 'MR', 'MUID', 'SM'];
+          var items = document.cookie.split(';');
+          for (var i = 0; i < items.length; i++) {
+            var name = items[i].split('=')[0] && items[i].split('=')[0].trim();
+            if (!name) continue;
+            var matched = false;
+            for (var j = 0; j < prefixes.length; j++) {
+              if (name === prefixes[j] || name.indexOf(prefixes[j] + '_') === 0) {
+                matched = true;
+                break;
+              }
+            }
+            if (!matched) continue;
+            document.cookie = name + '=; Max-Age=0; path=/; SameSite=Lax';
+            document.cookie =
+              name + '=; Max-Age=0; path=/; domain=' + window.location.hostname + '; SameSite=Lax';
+          }
+        }
+
+        function _disableAnalytics() {
+          if (typeof window === 'undefined') return;
+          if (typeof window.gtag === 'function') {
+            window.gtag('consent', 'update', {
+              analytics_storage: 'denied',
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+            });
+          }
+          if (typeof window.clarity === 'function') {
+            window.clarity('consent', false);
+          }
+          _deleteAnalyticsCookies();
+        }
+
+        function _loadGA4(id) {
+          if (typeof window === 'undefined') return;
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () {
+            window.dataLayer.push(arguments);
+          };
+
+          window.gtag('consent', 'default', {
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            wait_for_update: 500,
+          });
+
+          if (getConsent() === 'granted') {
+            window.gtag('consent', 'update', {
+              analytics_storage: 'granted',
+            });
+          }
+
+          var el = document.createElement('script');
+          el.async = true;
+          el.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+          document.head.appendChild(el);
+
+          window.gtag('js', new Date());
+          window.gtag('config', id, { send_page_view: false });
+        }
+
+        function _loadClarity(id) {
+          if (typeof window === 'undefined') return;
+          if (getConsent() !== 'granted') return;
+
+          window.clarity =
+            window.clarity ||
+            function () {
+              (window.clarity.q = window.clarity.q || []).push(arguments);
+            };
+          var el = document.createElement('script');
+          el.async = true;
+          el.src = 'https://www.clarity.ms/tag/' + id;
+          document.head.appendChild(el);
+        }
+
+        function _loadAnalytics() {
+          if (_initialized) return;
+          if (typeof window === 'undefined') return;
+
+          // Skip in dev mode
+          if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            _initialized = true;
+            return;
+          }
+
+          if (!gaId && !clarityId) return;
+          _initialized = true;
+
+          if (gaId) _loadGA4(gaId);
+          if (clarityId) _loadClarity(clarityId);
+        }
+
+        function trackPageView(pageTitle) {
+          if (typeof window === 'undefined') return;
+          if (typeof window.gtag !== 'function') return;
+          window.gtag('event', 'page_view', {
+            page_title: pageTitle || document.title,
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+          });
+        }
+
+        function trackEvent(action, params) {
+          if (typeof window === 'undefined') return;
+          if (typeof window.gtag !== 'function') return;
+          var clean = {};
+          if (params) {
+            for (var k in params) {
+              if (params.hasOwnProperty(k) && params[k] !== undefined) {
+                clean[k] = params[k];
+              }
+            }
+          }
+          window.gtag('event', action, clean);
+        }
+
+        function setConsent(state) {
+          try {
+            localStorage.setItem(CONSENT_KEY, state);
+          } catch (e) {}
+          if (state === 'granted') {
+            if (_initialized) {
+              if (typeof window.gtag === 'function') {
+                window.gtag('consent', 'update', { analytics_storage: 'granted' });
+              }
+              if (typeof window.clarity === 'function') {
+                window.clarity('consent', true);
+              }
+            } else {
+              _loadAnalytics();
+            }
+            trackPageView();
+          } else {
+            _disableAnalytics();
+          }
+        }
+
+        function _installStorageListener() {
+          if (_storageListenerInstalled) return;
+          if (typeof window === 'undefined') return;
+          _storageListenerInstalled = true;
+          window.addEventListener('storage', function (e) {
+            if (e.key === CONSENT_KEY) {
+              var newVal = e.newValue;
+              if (newVal === 'granted') {
+                if (!_initialized) {
+                  _loadAnalytics();
+                } else {
+                  if (typeof window.gtag === 'function') {
+                    window.gtag('consent', 'update', { analytics_storage: 'granted' });
+                  }
+                  if (typeof window.clarity === 'function') {
+                    window.clarity('consent', true);
+                  }
+                }
+                trackPageView();
+              } else if (newVal === 'denied') {
+                _disableAnalytics();
+              }
+            }
+          });
+        }
+
+        function initAnalytics() {
+          _installStorageListener();
+          var init = function () {
+            var consent = getConsent();
+            if (consent === 'granted') {
+              _loadAnalytics();
+            } else if (consent === null) {
+              _initialized = false;
+            }
+          };
+          if (typeof document === 'undefined' || document.readyState !== 'loading') {
+            init();
+          } else {
+            document.addEventListener('DOMContentLoaded', init, { once: true });
+          }
+        }
+
+        // Expose public API for the consent banner & other components
+        window.wordbase = {
+          getConsent: getConsent,
+          setConsent: setConsent,
+          hasConsent: function () { return getConsent() === 'granted'; },
+          trackPageView: trackPageView,
+          trackEvent: trackEvent,
+          openConsent: function () {
+            window.dispatchEvent(new Event('wordbase:open-analytics-consent'));
+          },
+        };
+
+        initAnalytics();
+
+        // Wire up footer "分析偏好" button
+        document.addEventListener('click', function (e) {
+          var btn = e.target.closest('#analytics-preference-btn');
+          if (btn) {
+            window.dispatchEvent(new Event('wordbase:open-analytics-consent'));
+          }
+        });
+      })();
+    </script>
   </head>
   <body>
     <slot />
+    <AnalyticsConsentBanner />
   </body>
 </html>
