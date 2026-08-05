@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@source "./../**/*.astro";
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.landing-dark {
+  color-scheme: dark;
+  --color-bg: #0a0e1a;
+  --color-text: #ffffff;
+  --color-text-muted: #94a3b8;
+  --color-text-subtle: #64748b;
+  --color-border: rgb(30 41 59 / 0.6);
+  --color-card-bg: rgb(15 23 42 / 0.5);
+  --color-card-solid: rgb(15 23 42 / 0.6);
+  --color-nav-bg: rgb(10 14 26 / 0.8);
+  --color-section-alt: rgb(15 23 42 / 0.2);
+  background: #0a0e1a;
+}
+
+.landing-light {
+  color-scheme: light;
+  --color-bg: #fafaf9;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #94a3b8;
+  --color-border: #e2e8f0;
+  --color-card-bg: #ffffff;
+  --color-card-solid: #f8fafc;
+  --color-nav-bg: rgb(255 255 255 / 0.8);
+  --color-section-alt: rgb(248 250 252 / 0.8);
+  background: #fafaf9;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes word-fly {
+  0% { transform: scale(1) translate(0, 0); opacity: 1; }
+  60% { transform: scale(0.6) translate(var(--fly-x), var(--fly-y)); opacity: 0.8; }
+  100% { transform: scale(0.3) translate(var(--fly-x), var(--fly-y)); opacity: 0; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.landing-animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.landing-animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.landing-animate-fly {
+  animation: word-fly 0.7s ease-in forwards;
+}
+
+.landing-animate-count-up {
+  animation: count-up 0.5s ease-out forwards;
+}
+
+.landing-gradient-text {
+  background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #e879f9 100%);
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing-scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.landing-scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

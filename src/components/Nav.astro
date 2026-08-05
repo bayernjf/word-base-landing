@@ -1,0 +1,184 @@
+---
+import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+  { label: '工作流', href: '#workflow' },
+  { label: '浏览器扩展', href: '#extension' },
+  { label: 'AI 学习', href: '#learning' },
+  { label: '多端同步', href: '#platforms' },
+  { label: 'FAQ', href: '#faq' },
+];
+---
+
+<header
+  id="landing-nav"
+  class="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b border-transparent transition-all duration-300 bg-[var(--color-nav-bg)]"
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between overflow-visible">
+    <a href="/" class="flex items-center group overflow-visible">
+      <svg viewBox="0 0 340 128" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto -mt-1">
+        <defs>
+          <linearGradient id="bookLeft" x1="10" y1="10" x2="26" y2="54" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#818cf8"/>
+            <stop offset="100%" stop-color="#6366f1"/>
+          </linearGradient>
+          <linearGradient id="bookRight" x1="36" y1="14" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#a5b4fc"/>
+            <stop offset="100%" stop-color="#818cf8"/>
+          </linearGradient>
+          <linearGradient id="card" x1="22" y1="16" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#fbbf24"/>
+            <stop offset="100%" stop-color="#f59e0b"/>
+          </linearGradient>
+          <linearGradient id="textGrad" x1="72" y1="36" x2="240" y2="92" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#6366f1"/>
+            <stop offset="50%" stop-color="#818cf8"/>
+            <stop offset="100%" stop-color="#f59e0b"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(4, 24) scale(1.2)">
+          <rect x="36" y="14" width="16" height="40" rx="3" fill="url(#bookRight)"/>
+          <rect x="10" y="10" width="16" height="44" rx="3" fill="url(#bookLeft)"/>
+          <rect x="22" y="16" width="20" height="28" rx="3.5" fill="url(#card)"/>
+          <path d="M26 23.5h12M26 29.5h12M26 35.5h10" stroke="#1f2937" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+        </g>
+        <text x="78" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="50" font-weight="800" fill="url(#textGrad)" letter-spacing="-1.5">WordBase</text>
+      </svg>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-7">
+      {navLinks.map((l) => (
+        <a
+          href={l.href}
+          class="text-sm transition-colors hover:opacity-80 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+        >
+          {l.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+      <a
+        href="https://github.com/bayernjf/word-base"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="p-2 rounded-lg transition-colors hidden sm:block hover:bg-slate-800/60 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+        aria-label="GitHub"
+      >
+        <Icon name="Github" size={16} />
+      </a>
+      <a
+        href="https://word-base.pages.dev/app"
+        class="hidden sm:inline-flex text-sm transition-colors px-3 py-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+      >
+        进入 Web 版
+      </a>
+      <a
+        href="#cta"
+        class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all"
+      >
+        免费使用
+        <Icon name="ArrowRight" size={14} />
+      </a>
+
+      <button
+        id="mobile-menu-toggle"
+        class="md:hidden p-2 rounded-lg transition-colors hover:bg-slate-800/60 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+        aria-label="菜单"
+        aria-expanded="false"
+      >
+        <Icon name="Menu" size={20} class="menu-open-icon" />
+        <Icon name="X" size={20} class="menu-close-icon hidden" />
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="mobile-drawer"
+    class="md:hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0 border-[var(--color-border)]"
+  >
+    <nav class="flex flex-col gap-1 px-4 py-4 bg-[var(--color-nav-bg)]">
+      {navLinks.map((l) => (
+        <a
+          href={l.href}
+          class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]"
+        >
+          {l.label}
+        </a>
+      ))}
+      <a
+        href="https://word-base.pages.dev/app"
+        class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]"
+      >
+        进入 Web 版
+      </a>
+      <a
+        href="https://github.com/bayernjf/word-base"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]"
+      >
+        GitHub
+      </a>
+      <a
+        href="#cta"
+        class="mobile-nav-link mt-2 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25"
+      >
+        免费使用
+        <Icon name="ArrowRight" size={14} />
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    var toggle = document.getElementById('mobile-menu-toggle');
+    var drawer = document.getElementById('mobile-drawer');
+    var openIcon = document.querySelector('.menu-open-icon');
+    var closeIcon = document.querySelector('.menu-close-icon');
+    var nav = document.getElementById('landing-nav');
+    var isOpen = false;
+
+    function setOpen(open) {
+      isOpen = open;
+      if (open) {
+        drawer.classList.remove('max-h-0');
+        drawer.classList.add('max-h-96', 'border-t');
+        openIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+        toggle.setAttribute('aria-expanded', 'true');
+      } else {
+        drawer.classList.add('max-h-0');
+        drawer.classList.remove('max-h-96', 'border-t');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!isOpen);
+    });
+
+    document.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+      link.addEventListener('click', function () {
+        setOpen(false);
+      });
+    });
+
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 20) {
+        nav.classList.add('shadow-lg');
+        nav.style.borderBottomColor = '';
+        nav.classList.add('border-[var(--color-border)]');
+      } else {
+        nav.classList.remove('shadow-lg');
+        nav.classList.remove('border-[var(--color-border)]');
+        nav.classList.add('border-transparent');
+      }
+    }, { passive: true });
+  })();
+</script>

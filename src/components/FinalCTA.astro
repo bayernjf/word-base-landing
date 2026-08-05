@@ -1,0 +1,105 @@
+---
+import Icon from './Icon.astro';
+
+const platforms = ['Mac', 'Win', 'iOS', 'Android'];
+const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
+---
+
+<section id="cta" class="px-4 sm:px-6 py-20 sm:py-28">
+  <div class="max-w-3xl mx-auto text-center">
+    <div class="relative">
+      <div class="absolute inset-0 -z-10">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-fuchsia-500/20 rounded-full blur-[100px]"></div>
+      </div>
+
+      <h2 class="text-3xl sm:text-5xl font-bold tracking-tight leading-tight mb-6 text-[var(--color-text)]">
+        开始你的无痛
+        <br />
+        <span class="landing-gradient-text">词汇积累之旅</span>
+      </h2>
+      <p class="text-base sm:text-lg mb-10 max-w-xl mx-auto text-[var(--color-text-muted)]">
+        现在安装浏览器扩展，让每一次英文阅读都成为词汇积累的机会。
+      </p>
+      <div class="flex flex-col items-center justify-center gap-3">
+        <div class="inline-flex flex-wrap items-center justify-center gap-2">
+          <a
+            href={downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all"
+          >
+            <Icon name="Download" size={16} />
+            安装浏览器插件
+          </a>
+          {platforms.map((platform) => (
+            <button
+              type="button"
+              aria-disabled="true"
+              class="unavailable-platform-btn-cta inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold transition-colors border opacity-50 cursor-not-allowed bg-slate-800/60 border-slate-700/60 text-slate-200"
+            >
+              安装 {platform}
+            </button>
+          ))}
+        </div>
+        <a
+          href="https://word-base.pages.dev/app"
+          class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold transition-colors border bg-slate-800/60 hover:bg-slate-800 border-slate-700/60 text-slate-200"
+        >
+          <Icon name="ArrowRight" size={16} />
+          打开 Web 版
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var buttons = document.querySelectorAll('.unavailable-platform-btn-cta');
+    buttons.forEach(function (btn) {
+      var timer = null;
+      var tooltip = null;
+
+      function showTooltip(x, y) {
+        if (tooltip) return;
+        tooltip = document.createElement('div');
+        tooltip.setAttribute('role', 'tooltip');
+        tooltip.className = 'fixed z-[100] -translate-x-full -translate-y-full whitespace-nowrap rounded-xl border px-6 py-4 text-base font-medium shadow-xl pointer-events-none border-slate-700 bg-slate-900 text-slate-100 shadow-black/30';
+        tooltip.textContent = '该平台紧急更新上架中';
+        document.body.appendChild(tooltip);
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+      }
+
+      function hideTooltip() {
+        if (tooltip) {
+          tooltip.remove();
+          tooltip = null;
+        }
+      }
+
+      btn.addEventListener('mouseenter', function (e) {
+        timer = setTimeout(function () {
+          showTooltip(e.clientX, e.clientY);
+        }, 300);
+      });
+
+      btn.addEventListener('mousemove', function (e) {
+        if (tooltip) {
+          tooltip.style.left = e.clientX + 'px';
+          tooltip.style.top = e.clientY + 'px';
+        }
+      });
+
+      btn.addEventListener('mouseleave', function () {
+        if (timer) clearTimeout(timer);
+        timer = null;
+        hideTooltip();
+      });
+
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+      });
+    });
+  })();
+</script>

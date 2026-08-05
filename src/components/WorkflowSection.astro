@@ -1,0 +1,348 @@
+---
+import Icon from './Icon.astro';
+
+const steps = [
+  {
+    icon: 'MousePointer2',
+    color: '#818cf8',
+    step: '01',
+    title: '采集',
+    desc: '浏览英文网页时按住 Ctrl 悬停单词，即时弹出翻译释义',
+  },
+  {
+    icon: 'Cloud',
+    color: '#c084fc',
+    step: '02',
+    title: '同步',
+    desc: '点击收藏自动同步到云端，所有设备实时更新，永不丢失',
+  },
+  {
+    icon: 'Brain',
+    color: '#e879f9',
+    step: '03',
+    title: '学习',
+    desc: '在 Web/桌面/手机上通过 AI 故事、语境练习、SRS 复习掌握词汇',
+  },
+];
+
+const DEMO_PARAGRAPH = 'The most important skill in programming is not knowing everything, but knowing how to learn effectively. When you encounter an unfamiliar concept, take a moment to understand it deeply rather than just memorizing syntax. Great developers build robust mental models that help them tackle novel problems with confidence.';
+
+const DEMO_WORDS = [
+  { word: 'programming', pos: 'n.', phonetic: '/ˈproʊɡræmɪŋ/', meaning: '编程；程序设计' },
+  { word: 'unfamiliar', pos: 'adj.', phonetic: '/ˌʌnfəˈmɪliər/', meaning: '不熟悉的；陌生的' },
+  { word: 'concept', pos: 'n.', phonetic: '/ˈkɑːnsept/', meaning: '概念；观念' },
+  { word: 'robust', pos: 'adj.', phonetic: '/roʊˈbʌst/', meaning: '健壮的；稳固的' },
+  { word: 'tackle', pos: 'v.', phonetic: '/ˈtækl/', meaning: '处理；解决' },
+  { word: 'novel', pos: 'adj.', phonetic: '/ˈnɑːvl/', meaning: '新奇的；新颖的' },
+];
+
+const DEMO_WORDS_MAP: Record<string, typeof DEMO_WORDS[0]> = {};
+DEMO_WORDS.forEach((w) => { DEMO_WORDS_MAP[w.word] = w; });
+
+// Split paragraph into words and mark interactive ones
+const words = DEMO_PARAGRAPH.split(' ');
+---
+
+<section id="workflow" class="px-4 sm:px-6 py-20 sm:py-28">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4 bg-indigo-500/10 text-indigo-300">
+        <Icon name="ArrowRight" size={14} />
+        三步工作流
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+        从遇到生词到真正掌握
+      </h2>
+      <p class="mt-4 leading-relaxed text-[var(--color-text-muted)]">
+        浏览器即点即采，云端无缝同步，AI 驱动深度学习——词汇积累从未如此顺畅。
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4 mb-12">
+      {steps.map((s, i) => (
+        <div class="relative">
+          <div class="p-6 rounded-2xl border h-full transition-all bg-[var(--color-card-bg)] border-[var(--color-border)] hover:border-slate-700/80">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={`background-color: ${s.color}20; color: ${s.color};`}
+              >
+                <Icon name={s.icon} size={20} />
+              </div>
+              <span class="text-xs font-mono text-[var(--color-text-subtle)]">{s.step}</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2 text-[var(--color-text)]">{s.title}</h3>
+            <p class="text-sm leading-relaxed text-[var(--color-text-muted)]">{s.desc}</p>
+          </div>
+          {i < steps.length - 1 && (
+            <div class="hidden md:block absolute top-1/2 -right-3 z-10">
+              <Icon name="ArrowRight" size={20} class="text-slate-700" />
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div class="rounded-2xl border p-5 sm:p-8 bg-[var(--color-card-bg)] border-[var(--color-border)]">
+      <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="flex gap-1.5">
+              <div class="w-2.5 h-2.5 rounded-full bg-red-400/70"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-yellow-400/70"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-green-400/70"></div>
+            </div>
+            <span id="demo-status" class="text-xs ml-2 text-[var(--color-text-subtle)]">
+              按住 Ctrl 键开始查词（点击单词也可收藏）
+            </span>
+          </div>
+          <div
+            id="demo-paragraph"
+            class="relative text-base leading-loose p-5 rounded-xl transition-colors select-text bg-[var(--color-card-solid)]"
+          >
+            {words.map((rawWord, i) => {
+              const cleanWord = rawWord.replace(/[.,!?;:]$/, '');
+              const punct = rawWord.slice(cleanWord.length);
+              const demoWord = DEMO_WORDS_MAP[cleanWord.toLowerCase()];
+              return (
+                <span>
+                  {demoWord ? (
+                    <span
+                      class="demo-word relative inline-block cursor-pointer rounded px-0.5 -mx-0.5 transition-all text-slate-200 hover:text-indigo-300"
+                      data-word={demoWord.word}
+                      data-pos={demoWord.pos}
+                      data-phonetic={demoWord.phonetic}
+                      data-meaning={demoWord.meaning}
+                    >
+                      {cleanWord}
+                    </span>
+                  ) : (
+                    <span class="text-[var(--color-text-muted)]">{cleanWord}</span>
+                  )}
+                  {punct && <span class="text-[var(--color-text-muted)]">{punct}</span>}
+                  {i < words.length - 1 ? ' ' : null}
+                </span>
+              );
+            })}
+          </div>
+          <p class="text-xs mt-3 text-[var(--color-text-subtle)]">
+            💡 提示：按住 <kbd class="px-1.5 py-0.5 rounded text-[10px] font-mono border bg-slate-800 border-slate-700 text-slate-300">Ctrl</kbd> 键后悬停带下划线的单词查看释义，点击单词直接收藏
+          </p>
+        </div>
+
+        <div
+          id="word-book"
+          class="lg:w-64 shrink-0 rounded-xl border p-4 bg-[var(--color-card-solid)] border-[var(--color-border)]"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-sm font-semibold text-[var(--color-text)]">📚 我的单词本</h4>
+            <span id="word-count" class="text-xs tabular-nums text-[var(--color-text-subtle)]">
+              0 词
+            </span>
+          </div>
+          <div id="word-list" class="space-y-1.5 min-h-[120px]">
+            <p class="text-xs text-center py-8 leading-relaxed text-[var(--color-text-subtle)]">
+              还没有收藏单词
+              <br />
+              试试点击左侧带下划线的单词
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="demo-popup" class="fixed z-50 pointer-events-none hidden" style="left: 0; top: 0;">
+        <div class="pointer-events-auto rounded-xl p-3 shadow-2xl border min-w-[220px] relative bg-slate-900 border-slate-700">
+          <div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 bg-slate-900 border-l border-t border-slate-700"></div>
+          <div class="flex items-center gap-2 mb-1">
+            <span id="popup-word" class="text-sm font-bold text-white"></span>
+            <span class="p-0.5 rounded transition-colors text-slate-400">
+              <Icon name="Volume2" size={12} />
+            </span>
+            <span id="popup-pos" class="text-[10px] px-1.5 py-0.5 rounded ml-auto bg-indigo-500/20 text-indigo-300"></span>
+          </div>
+          <p id="popup-phonetic" class="text-[11px] mb-2 font-mono text-[var(--color-text-subtle)]"></p>
+          <p id="popup-meaning" class="text-xs leading-relaxed mb-2.5 text-[var(--color-text-muted)]"></p>
+          <button
+            id="popup-collect"
+            class="w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-all bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:opacity-90 active:scale-[0.98]"
+          >
+            <Icon name="Plus" size={12} />
+            收藏到单词本
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var ctrlPressed = false;
+    var collected = [];
+    var popup = document.getElementById('demo-popup');
+    var popupWord = document.getElementById('popup-word');
+    var popupPos = document.getElementById('popup-pos');
+    var popupPhonetic = document.getElementById('popup-phonetic');
+    var popupMeaning = document.getElementById('popup-meaning');
+    var popupCollect = document.getElementById('popup-collect');
+    var wordList = document.getElementById('word-list');
+    var wordCount = document.getElementById('word-count');
+    var demoStatus = document.getElementById('demo-status');
+    var bookCard = document.getElementById('word-book');
+    var activeWordEl = null;
+
+    function updateStatus() {
+      if (ctrlPressed) {
+        demoStatus.textContent = '🔍 查词模式已开启 — 悬停带下划线的单词';
+      } else {
+        demoStatus.textContent = '按住 Ctrl 键开始查词（点击单词也可收藏）';
+      }
+    }
+
+    function updateWordList() {
+      wordCount.textContent = collected.length + ' 词';
+      if (collected.length === 0) {
+        wordList.innerHTML = '<p class="text-xs text-center py-8 leading-relaxed text-[var(--color-text-subtle)]">还没有收藏单词<br>试试点击左侧带下划线的单词</p>';
+        return;
+      }
+      wordList.innerHTML = collected.map(function (w) {
+        return '<div class="px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-2 landing-animate-count-up bg-slate-800/50">' +
+          '<span class="font-medium truncate text-[var(--color-text)]">' + w.word + '</span>' +
+          '<span class="truncate text-[10px] text-[var(--color-text-subtle)]">' + w.meaning + '</span>' +
+          '<span class="ml-auto text-emerald-400 text-[10px] shrink-0">已同步</span>' +
+          '</div>';
+      }).join('');
+    }
+
+    function showPopup(word, x, y) {
+      popupWord.textContent = word.word;
+      popupPos.textContent = word.pos;
+      popupPhonetic.textContent = word.phonetic;
+      popupMeaning.textContent = word.meaning;
+      popup.style.left = x + 'px';
+      popup.style.top = y + 'px';
+      popup.style.transform = 'translateX(-50%)';
+      popup.classList.remove('hidden');
+
+      if (collected.some(function (c) { return c.word === word.word; })) {
+        popupCollect.innerHTML = '✓ 已收藏';
+        popupCollect.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-500', 'text-white', 'hover:opacity-90');
+        popupCollect.classList.add('bg-emerald-500/20', 'text-emerald-400', 'cursor-default');
+      } else {
+        popupCollect.innerHTML = '';
+        var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        icon.setAttribute('width', '12');
+        icon.setAttribute('height', '12');
+        icon.setAttribute('viewBox', '0 0 24 24');
+        icon.setAttribute('fill', 'none');
+        icon.setAttribute('stroke', 'currentColor');
+        icon.setAttribute('stroke-width', '2');
+        icon.setAttribute('stroke-linecap', 'round');
+        icon.setAttribute('stroke-linejoin', 'round');
+        icon.innerHTML = '<path d="M5 12h14"/><path d="M12 5v14"/>';
+        popupCollect.appendChild(icon);
+        popupCollect.appendChild(document.createTextNode(' 收藏到单词本'));
+        popupCollect.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-500', 'text-white', 'hover:opacity-90');
+        popupCollect.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'cursor-default');
+      }
+    }
+
+    function hidePopup() {
+      popup.classList.add('hidden');
+    }
+
+    function doCollect(wordData, el) {
+      if (collected.some(function (c) { return c.word === wordData.word; })) return;
+
+      if (el && bookCard) {
+        var wordRect = el.getBoundingClientRect();
+        var targetRect = bookCard.getBoundingClientRect();
+        var flyX = targetRect.left + targetRect.width / 2 - wordRect.left - wordRect.width / 2;
+        var flyY = targetRect.top - wordRect.top + 20;
+
+        el.style.setProperty('--fly-x', flyX + 'px');
+        el.style.setProperty('--fly-y', flyY + 'px');
+        el.classList.add('landing-animate-fly');
+
+        setTimeout(function () {
+          el.classList.remove('landing-animate-fly');
+          el.style.color = '';
+          el.classList.add('text-emerald-400/70');
+          collected.push(wordData);
+          updateWordList();
+          hidePopup();
+        }, 700);
+      } else {
+        collected.push(wordData);
+        updateWordList();
+        hidePopup();
+      }
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Control' || e.key === 'Meta') {
+        e.preventDefault();
+        ctrlPressed = true;
+        updateStatus();
+      }
+    });
+
+    document.addEventListener('keyup', function (e) {
+      if (e.key === 'Control' || e.key === 'Meta') {
+        ctrlPressed = false;
+        hidePopup();
+        activeWordEl = null;
+        updateStatus();
+      }
+    });
+
+    document.querySelectorAll('.demo-word').forEach(function (el) {
+      el.addEventListener('mouseenter', function (e) {
+        if (!ctrlPressed) return;
+        var wordData = {
+          word: el.dataset.word,
+          pos: el.dataset.pos,
+          phonetic: el.dataset.phonetic,
+          meaning: el.dataset.meaning,
+        };
+        var rect = el.getBoundingClientRect();
+        showPopup(wordData, rect.left + rect.width / 2, rect.bottom + 10);
+        activeWordEl = el;
+        if (ctrlPressed) {
+          el.classList.add('underline', 'decoration-indigo-400/50', 'decoration-2', 'underline-offset-4', 'hover:bg-indigo-500/20', 'text-indigo-200');
+        }
+      });
+
+      el.addEventListener('mouseleave', function () {
+        if (!ctrlPressed) {
+          hidePopup();
+        }
+        el.classList.remove('underline', 'decoration-indigo-400/50', 'decoration-2', 'underline-offset-4', 'hover:bg-indigo-500/20', 'text-indigo-200');
+      });
+
+      el.addEventListener('click', function (e) {
+        var wordData = {
+          word: el.dataset.word,
+          pos: el.dataset.pos,
+          phonetic: el.dataset.phonetic,
+          meaning: el.dataset.meaning,
+        };
+        if (!collected.some(function (c) { return c.word === wordData.word; })) {
+          doCollect(wordData, el);
+        }
+      });
+    });
+
+    popupCollect.addEventListener('click', function () {
+      if (activeWordEl) {
+        var wordData = {
+          word: activeWordEl.dataset.word,
+          pos: activeWordEl.dataset.pos,
+          phonetic: activeWordEl.dataset.phonetic,
+          meaning: activeWordEl.dataset.meaning,
+        };
+        doCollect(wordData, activeWordEl);
+      }
+    });
+  })();
+</script>

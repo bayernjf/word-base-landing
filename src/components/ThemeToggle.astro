@@ -1,0 +1,55 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<button
+  id="theme-toggle"
+  class={`p-2 rounded-lg transition-colors hover:bg-slate-800/60 dark:hover:bg-slate-800/60 text-[var(--color-text-muted)] hover:text-[var(--color-text)] ${className}`}
+  aria-label="切换主题"
+>
+  <Icon name="Sun" size={16} class="theme-icon-sun hidden" />
+  <Icon name="Moon" size={16} class="theme-icon-moon" />
+</button>
+
+<script is:inline>
+  (function () {
+    function updateThemeIcons() {
+      var isDark = document.documentElement.classList.contains('landing-dark');
+      var sun = document.querySelector('.theme-icon-sun');
+      var moon = document.querySelector('.theme-icon-moon');
+      if (sun && moon) {
+        if (isDark) {
+          sun.classList.remove('hidden');
+          moon.classList.add('hidden');
+        } else {
+          sun.classList.add('hidden');
+          moon.classList.remove('hidden');
+        }
+      }
+    }
+
+    updateThemeIcons();
+
+    document.addEventListener('click', function (e) {
+      var toggle = e.target.closest('#theme-toggle');
+      if (!toggle) return;
+      var isDark = document.documentElement.classList.contains('landing-dark');
+      if (isDark) {
+        document.documentElement.classList.remove('landing-dark');
+        document.documentElement.classList.add('landing-light');
+        try { localStorage.setItem('wordbase-landing-theme', 'light'); } catch (_) {}
+      } else {
+        document.documentElement.classList.remove('landing-light');
+        document.documentElement.classList.add('landing-dark');
+        try { localStorage.setItem('wordbase-landing-theme', 'dark'); } catch (_) {}
+      }
+      updateThemeIcons();
+    });
+  })();
+</script>

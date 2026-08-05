@@ -1,0 +1,83 @@
+---
+import Icon from './Icon.astro';
+
+const platforms = [
+  { icon: 'Globe', name: 'Web', desc: '浏览器即开即用', color: '#818cf8', delay: '0s' },
+  { icon: 'Monitor', name: '桌面端', desc: 'macOS / Windows', color: '#c084fc', delay: '0.4s' },
+  { icon: 'Smartphone', name: '移动端', desc: 'iOS / Android', color: '#e879f9', delay: '0.8s' },
+];
+
+const syncFeatures = [
+  { icon: 'RefreshCw', label: '实时双向同步' },
+  { icon: 'Cloud', label: '云端备份' },
+  { icon: 'Lock', label: '本地优先 · 离线可用' },
+];
+
+const checklist = [
+  '浏览器扩展采集',
+  '多单词本分类管理',
+  '自定义 AI 模型',
+  '数据导入导出',
+];
+---
+
+<section
+  id="platforms"
+  class="px-4 sm:px-6 py-20 sm:py-28 border-y bg-[var(--color-section-alt)] border-[var(--color-border)]"
+>
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4 bg-emerald-500/10 text-emerald-300">
+        <Icon name="Cloud" size={14} />
+        五端同步
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+        一次收藏，随处学习
+      </h2>
+      <p class="mt-4 leading-relaxed text-[var(--color-text-muted)]">
+        浏览器里收藏的单词，在电脑和手机上立即可见。通勤路上用手机复习，工作时用桌面端深度学习。
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5 mb-10">
+      {platforms.map((p) => (
+        <div
+          class="relative p-8 rounded-2xl border text-center transition-all landing-animate-float bg-[var(--color-card-bg)] border-[var(--color-border)]"
+          style={`animation-delay: ${p.delay};`}
+        >
+          <div
+            class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            style={`background-color: ${p.color}20; color: ${p.color};`}
+          >
+            <Icon name={p.icon} size={24} />
+          </div>
+          <h3 class="text-lg font-semibold mb-1 text-[var(--color-text)]">{p.name}</h3>
+          <p class="text-sm text-[var(--color-text-muted)]">{p.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="rounded-2xl border p-6 sm:p-8 bg-[var(--color-card-bg)] border-[var(--color-border)]">
+      <div class="grid sm:grid-cols-3 gap-6">
+        {syncFeatures.map((f) => (
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-emerald-500/15 text-emerald-400">
+              <Icon name={f.icon} size={16} />
+            </div>
+            <div>
+              <span class="text-sm font-medium text-[var(--color-text)]">{f.label}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="mt-6 pt-6 border-t flex flex-wrap gap-x-6 gap-y-2 text-xs border-[var(--color-border)] text-[var(--color-text-subtle)]">
+        {checklist.map((item) => (
+          <span class="flex items-center gap-1">
+            <Icon name="Check" size={12} class="text-emerald-400" />
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

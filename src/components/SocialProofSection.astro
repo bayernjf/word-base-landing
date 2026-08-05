@@ -1,0 +1,42 @@
+---
+import Icon from './Icon.astro';
+
+const items = [
+  { icon: 'Star', label: 'GitHub Stars', value: '0', id: 'stat-stars' },
+  { icon: 'GitFork', label: 'Forks', value: '0', id: 'stat-forks' },
+  { icon: 'BookOpen', label: '生词本容量', value: '无限' },
+  { icon: 'Users', label: '支持平台', value: '5 端' },
+];
+---
+
+<section class="px-4 sm:px-6 py-16">
+  <div class="max-w-4xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-2xl border bg-slate-900/40 border-slate-800">
+      {items.map((item) => (
+        <div class="flex flex-col items-center gap-2 text-center">
+          <Icon name={item.icon} size={20} class="text-indigo-400" />
+          <span class="text-2xl font-bold text-[var(--color-text)]" id={item.id}>{item.value}</span>
+          <span class="text-xs text-[var(--color-text-subtle)]">{item.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    function formatNum(n) {
+      return n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n);
+    }
+
+    fetch('https://api.github.com/repos/bayernjf/word-base')
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        var stars = document.getElementById('stat-stars');
+        var forks = document.getElementById('stat-forks');
+        if (stars) stars.textContent = formatNum(data.stargazers_count || 0);
+        if (forks) forks.textContent = formatNum(data.forks_count || 0);
+      })
+      .catch(function () {});
+  })();
+</script>

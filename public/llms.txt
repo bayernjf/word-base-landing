@@ -1,0 +1,38 @@
+# WordBase
+
+> WordBase 是一款 AI 驱动的英语单词学习与复习应用，覆盖 Web、桌面（macOS/Windows）、移动端（iOS/Android），并提供浏览器扩展 WordPicker，支持在任意网页中即点即查、一键收藏生词到个人词库。
+
+## 核心功能
+
+- **WordPicker 浏览器扩展**：在任意网页划词/悬停查词，一键保存生词到词库，零打扰沉浸式阅读
+- **AI 学习工作台**：基于个人词库生成定制化例句、词根词缀解析、记忆联想与情景造句
+- **SRS 间隔重复复习**：自适应复习算法（SM-2 改进），智能安排复习时间，记忆效率最大化
+- **多端同步**：Web / Desktop / Mobile 三端实时同步学习进度与词库
+- **AI 智能生词本**：自动归类、按难度分级、生成专属学习计划
+
+## 目标用户
+
+- 准备 GRE/TOEFL/IELTS/考研等标化考试的学生
+- 需要大量阅读英文文献的科研工作者与工程师
+- 希望提升英语词汇量的职场人士与英语爱好者
+- 偏好「在真实语境中学单词」而非死记硬背的学习者
+
+## 技术栈
+
+- 前端：Next.js 15 + React 19、Vite + React 19（Desktop）、Expo + React Native（Mobile）
+- 后端：Hono on Node.js / Vercel Serverless
+- 数据层：Supabase（PostgreSQL + Auth + Realtime）
+- 桌面壳：Tauri 2（Rust）
+- AI：火山方舟 ARK 模型（豆包系列）
+- 共享层：TypeScript Monorepo（npm workspaces + Turbo）
+- 部署：Cloudflare Pages（前端 CDN）+ Vercel（API）
+
+## 使用方式
+
+1. 安装 WordPicker 浏览器扩展，在阅读英文内容时随时查词收藏
+2. 打开 WordBase Web / 桌面 / 移动应用，进入 AI 学习工作台
+3. 系统根据词库自动生成 SRS 复习计划，每日打卡巩固记忆
+
+## 详细信息
+
+完整的 AI 友好产品文档请见：https://word-base-landing.pages.dev/llms-full.txt

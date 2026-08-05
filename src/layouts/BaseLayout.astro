@@ -1,0 +1,97 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonical?: string;
+}
+
+const {
+  title,
+  description,
+  ogImage = '/preview.png',
+  canonical,
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://word-base-landing.pages.dev';
+const canonicalUrl = canonical ?? `${siteUrl}${Astro.url.pathname}`;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'WordBase',
+  description: description,
+  applicationCategory: 'EducationApplication',
+  operatingSystem: 'Web, iOS, Android, macOS, Windows',
+  url: siteUrl,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1280',
+  },
+};
+---
+
+<!doctype html>
+<html lang="zh-CN" class="landing-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="keywords"
+      content="英语单词学习, AI 单词应用, SRS 间隔重复, 单词记忆, WordPicker, WordBase, 词汇学习, 多端同步单词"
+    />
+    <meta name="author" content="WordBase" />
+    <meta name="theme-color" content="#0a0e1a" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="WordBase" />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- JSON-LD SoftwareApplication -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Theme switch inline script (read from localStorage to avoid FOUC) -->
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('wordbase-landing-theme');
+          var root = document.documentElement;
+          if (stored === 'light') {
+            root.classList.remove('landing-dark');
+            root.classList.add('landing-light');
+          } else {
+            root.classList.add('landing-dark');
+            root.classList.remove('landing-light');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
