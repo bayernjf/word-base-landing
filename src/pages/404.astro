@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+---
+
+<BaseLayout title="404 - WordBase" description="你访问的 WordBase 页面不存在或已被移动。">
+  <main class="flex min-h-[70vh] flex-col items-center justify-center px-4 pt-16 text-center">
+    <p class="bg-gradient-to-r from-indigo-400 via-indigo-300 to-amber-400 bg-clip-text text-7xl font-extrabold text-transparent">404</p>
+    <h1 class="mt-4 text-xl font-semibold text-slate-900 dark:text-white">
+      <span class="lang-zh">页面不存在</span>
+      <span class="lang-en hidden">Page Not Found</span>
+    </h1>
+    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+      <span class="lang-zh">你访问的页面不存在，或者已经被移动。</span>
+      <span class="lang-en hidden">The page you visited does not exist or has been moved.</span>
+    </p>
+    <a href="/" class="mt-8 inline-flex items-center rounded-lg bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-400">
+      <span class="lang-zh">返回首页</span>
+      <span class="lang-en hidden">Back to Home</span>
+    </a>
+    <div class="mt-10">
+      <ThemeToggle />
+    </div>
+  </main>
+</BaseLayout>
