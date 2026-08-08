@@ -25,3 +25,18 @@ WordBase（浏览器背单词扩展）落地页。Astro 7 静态站点，中英�
 1. 决定并统一正式域名（大概率改为 word-base.pages.dev），更新 baseUrl/canonical/sitemap。
 2. `git push`（dev 分支，推送前可先 `git pull --rebase`）。
 3. 部署后验证下载点击统计埋点、og:image、404 页面。
+
+## taste-skill 设计审计（2026-08-08，本地未提交）
+按 taste-skill 反 AI-slop 方法论清理设计 Tell，仅动样式与文案，
+未改动内容 IA、URL、路由和功能逻辑。
+- 英文文案 em-dash 清扫：SEO 标题 `X — Brand` 统一为 `X | Brand`、404 标题改用冒号、
+  正文按语义改冒号/分号/逗号；中文“——”为规范破折号，保留未动。
+- 导航栏阴影切换由 scroll 监听改为 IntersectionObserver 顶部哨兵
+  （src/components/Nav.astro），项目内 scroll 监听零残留。
+- 去 AI 紫、换 emerald 单色 accent：Nav/Hero/FinalCTA 共 5 处 indigo→purple
+  渐变按钮改为 emerald-500 实色；global.css 标题强调色由紫粉动画渐变改为
+  静态 #34d399 并删除 gradient-shift 循环动画；WorkflowSection 的 JS classList
+  类名同步更新。
+- `npm run build` 验证通过（5 页）。
+
+后续：审阅上述改动后按原子规则分批提交推送（英文 Conventional Commits）。
