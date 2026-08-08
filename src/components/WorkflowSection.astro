@@ -164,7 +164,7 @@ const words = DEMO_PARAGRAPH.split(' ');
           <p id="popup-meaning" class="text-xs leading-relaxed mb-2.5 text-[var(--color-text-muted)]"></p>
           <button
             id="popup-collect"
-            class="w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-all bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:opacity-90 active:scale-[0.98]"
+            class="w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-all bg-emerald-500 text-white hover:bg-emerald-400 active:scale-[0.98]"
           >
             <Icon name="Plus" size={12} />
             收藏到单词本
@@ -231,7 +231,7 @@ const words = DEMO_PARAGRAPH.split(' ');
 
       if (collected.some(function (c) { return c.word === word.word; })) {
         popupCollect.innerHTML = '✓ 已收藏';
-        popupCollect.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-500', 'text-white', 'hover:opacity-90');
+        popupCollect.classList.remove('bg-emerald-500', 'text-white', 'hover:bg-emerald-400');
         popupCollect.classList.add('bg-emerald-500/20', 'text-emerald-400', 'cursor-default');
       } else {
         popupCollect.innerHTML = '';
@@ -247,7 +247,7 @@ const words = DEMO_PARAGRAPH.split(' ');
         icon.innerHTML = '<path d="M5 12h14"/><path d="M12 5v14"/>';
         popupCollect.appendChild(icon);
         popupCollect.appendChild(document.createTextNode(' 收藏到单词本'));
-        popupCollect.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-500', 'text-white', 'hover:opacity-90');
+        popupCollect.classList.add('bg-emerald-500', 'text-white', 'hover:bg-emerald-400');
         popupCollect.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'cursor-default');
       }
     }
