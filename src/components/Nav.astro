@@ -183,16 +183,22 @@ const navLinks = [
       });
     });
 
-    window.addEventListener('scroll', function () {
-      if (window.scrollY > 20) {
-        nav.classList.add('shadow-lg');
-        nav.style.borderBottomColor = '';
-        nav.classList.add('border-[var(--color-border)]');
-      } else {
+    // Nav shadow toggle via a top sentinel + IntersectionObserver
+    // (no window scroll listener)
+    var navSentinel = document.createElement('div');
+    navSentinel.setAttribute('aria-hidden', 'true');
+    navSentinel.style.cssText = 'position:absolute;top:20px;height:1px;width:1px;pointer-events:none;';
+    document.body.prepend(navSentinel);
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
         nav.classList.remove('shadow-lg');
         nav.classList.remove('border-[var(--color-border)]');
         nav.classList.add('border-transparent');
+      } else {
+        nav.classList.add('shadow-lg');
+        nav.style.borderBottomColor = '';
+        nav.classList.add('border-[var(--color-border)]');
       }
-    }, { passive: true });
+    }).observe(navSentinel);
   })();
 </script>
