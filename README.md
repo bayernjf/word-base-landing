@@ -51,6 +51,13 @@ word-base-landing/
 
 `astro.config.mjs` 中 `site` 配置为 `https://word-base-landing.pages.dev`,构建产物为纯静态文件(`dist/`),可直接部署到 Cloudflare Pages 或任意静态托管。
 
+## 共享设计包
+
+本仓库使用共享设计包 `@bay/landing-ui`(`github:bayernjf/landing-ui#v1.1.0`):
+- 图标统一走 `@bay/landing-ui/components/Icon.astro`(内联 Lucide SVG,无运行时依赖)
+- 设计令牌来自 `@bay/landing-ui/styles/tokens.css`(`--lui-*`),品牌色(emerald)在 `src/styles/global.css` 以 `:root { --lui-accent }` 覆盖
+- 包版本以 git tag 管理;升级时改 `package.json` 中的 tag 后重新 `npm install`
+
 ## 与 word-base 内置落地页的关系
 
 word-base 主仓库(`apps/web/src/landing/`,部署在 `word-base.pages.dev`)内置了一套 React 落地页,与本仓库区块一一对应。两套文案已于 2026-08-08 逐区块对齐,修改任一侧内容时请同步另一侧:
