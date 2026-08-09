@@ -1,5 +1,5 @@
 ---
-import Icon from './Icon.astro';
+import Icon from '@bay/landing-ui/components/Icon.astro';
 
 const platforms = ['Mac', 'Win', 'iOS', 'Android'];
 const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
@@ -26,7 +26,7 @@ const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
             href={downloadUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="ext-download-link inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 hover:bg-emerald-400 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all"
+            class="ext-download-link inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold bg-emerald-500 text-white shadow-sm hover:bg-emerald-400 hover:scale-[1.02] transition-all"
           >
             <Icon name="Download" size={16} />
             安装浏览器插件
