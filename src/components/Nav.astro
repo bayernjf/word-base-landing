@@ -1,14 +1,27 @@
 ---
 import Icon from '@bay/landing-ui/components/Icon.astro';
 import ThemeToggle from './ThemeToggle.astro';
+import { getLangFromUrl, useTranslations, getAltLangPath, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
 const navLinks = [
-  { label: '工作流', href: '#workflow' },
-  { label: '浏览器扩展', href: '#extension' },
-  { label: 'AI 学习', href: '#learning' },
-  { label: '多端同步', href: '#platforms' },
-  { label: 'FAQ', href: '#faq' },
+  { label: t('nav.workflow'), href: '#workflow' },
+  { label: t('nav.extension'), href: '#extension' },
+  { label: t('nav.learning'), href: '#learning' },
+  { label: t('nav.platforms'), href: '#platforms' },
+  { label: t('nav.faq'), href: '#faq' },
 ];
+
+const homeHref = currentLang === 'zh' ? '/zh/' : '/';
+const altLangHref = getAltLangPath(Astro.url.pathname, currentLang);
+const altLangLabel = currentLang === 'zh' ? 'EN' : '中文';
 ---
 
 <header
@@ -16,7 +29,7 @@ const navLinks = [
   class="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b border-transparent transition-all duration-300 bg-[var(--color-nav-bg)]"
 >
   <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between overflow-visible">
-    <a href="/" class="flex items-center group overflow-visible">
+    <a href={homeHref} class="flex items-center group overflow-visible">
       <svg viewBox="0 0 340 128" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto -mt-1">
         <defs>
           <linearGradient id="bookLeft" x1="10" y1="10" x2="26" y2="54" gradientUnits="userSpaceOnUse">
@@ -59,7 +72,13 @@ const navLinks = [
     </nav>
 
     <div class="flex items-center gap-2">
-      <ThemeToggle />
+      <a
+        href={altLangHref}
+        class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors text-slate-400 hover:text-white hover:bg-slate-800/60"
+      >
+        {altLangLabel}
+      </a>
+      <ThemeToggle lang={currentLang} />
       <a
         href="https://bayjf.com"
         target="_blank"
@@ -79,20 +98,20 @@ const navLinks = [
         href="https://word-base.pages.dev/app"
         class="hidden sm:inline-flex text-sm transition-colors px-3 py-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
       >
-        进入 Web 版
+        {t('nav.webApp')}
       </a>
       <a
         href="#cta"
         class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-emerald-500 text-white shadow-sm hover:bg-emerald-400 hover:scale-[1.02] transition-all"
       >
-        免费使用
+        {t('nav.freeUse')}
         <Icon name="ArrowRight" size={14} />
       </a>
 
       <button
         id="mobile-menu-toggle"
         class="md:hidden p-2 rounded-lg transition-colors hover:bg-slate-800/60 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-        aria-label="菜单"
+        aria-label={t('nav.menu')}
         aria-expanded="false"
       >
         <Icon name="Menu" size={20} class="menu-open-icon" />
@@ -118,7 +137,7 @@ const navLinks = [
         href="https://word-base.pages.dev/app"
         class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]"
       >
-        进入 Web 版
+        {t('nav.webApp')}
       </a>
       <a
         href="https://bayjf.com"
@@ -140,7 +159,7 @@ const navLinks = [
         href="#cta"
         class="mobile-nav-link mt-2 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium bg-emerald-500 text-white shadow-sm"
       >
-        免费使用
+        {t('nav.freeUse')}
         <Icon name="ArrowRight" size={14} />
       </a>
     </nav>
@@ -183,8 +202,6 @@ const navLinks = [
       });
     });
 
-    // Nav shadow toggle via a top sentinel + IntersectionObserver
-    // (no window scroll listener)
     var navSentinel = document.createElement('div');
     navSentinel.setAttribute('aria-hidden', 'true');
     navSentinel.style.cssText = 'position:absolute;top:20px;height:1px;width:1px;pointer-events:none;';

@@ -1,21 +1,32 @@
 ---
-// Analytics consent banner - ported from shared/components/AnalyticsConsentBanner.tsx
-// Relies on window.wordbase.setConsent / getConsent defined in BaseLayout analytics script.
+import { getLangFromUrl, useTranslations, getLocalizedPath, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
+
+const consentText = t('consent.text');
+const privacyHref = getLocalizedPath('/privacy', currentLang);
+const privacyLabel = t('consent.privacy');
+const declineLabel = t('consent.decline');
+const acceptLabel = t('consent.accept');
 ---
 
 <div id="analytics-consent-banner" class="hidden fixed bottom-0 inset-x-0 z-[100] p-3 sm:p-4">
   <div class="max-w-3xl mx-auto bg-slate-900/95 backdrop-blur-xl border border-slate-700/60 rounded-2xl shadow-2xl shadow-black/30 p-4 sm:p-5">
     <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-3">
-      我们使用 Google Analytics 和 Microsoft Clarity 来分析流量和使用模式，以持续改进产品。
-      这些工具不会收集你的个人信息（如邮箱、密码、学习内容）。
-      你可以选择接受或拒绝。你可以在任何时候在「分析偏好」中更改偏好。
+      {consentText}
       <a
-        href="/privacy"
+        href={privacyHref}
         class="text-indigo-400 hover:text-indigo-300 underline ml-1"
         target="_blank"
         rel="noopener noreferrer"
       >
-        隐私政策
+        {privacyLabel}
       </a>
     </p>
     <div class="flex items-center gap-2 justify-end">
@@ -24,14 +35,14 @@
         id="analytics-consent-decline"
         class="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
       >
-        拒绝
+        {declineLabel}
       </button>
       <button
         type="button"
         id="analytics-consent-accept"
         class="px-5 py-2 rounded-xl text-xs font-semibold bg-indigo-500 hover:bg-indigo-400 text-white transition-colors cursor-pointer shadow-lg shadow-indigo-500/25"
       >
-        接受
+        {acceptLabel}
       </button>
     </div>
   </div>
@@ -56,13 +67,11 @@
         ? w.wordbase.getConsent()
         : null;
 
-      // Auto-show banner when consent has not been set yet
       if (consent === null) {
         setTimeout(show, 1000);
       }
     }
 
-    // Listen for "open analytics consent" requests (e.g. from footer "分析偏好" button)
     window.addEventListener('wordbase:open-analytics-consent', show);
 
     document.addEventListener('click', function (e) {

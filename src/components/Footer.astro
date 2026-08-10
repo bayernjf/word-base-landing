@@ -1,5 +1,33 @@
 ---
+import { getLangFromUrl, useTranslations, getLocalizedPath, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
+
 const year = new Date().getFullYear();
+const copyright = t('footer.copyright', { year: String(year) });
+
+const homeHref = currentLang === 'zh' ? '/zh/' : '/';
+const privacyHref = getLocalizedPath('/privacy', currentLang);
+const termsHref = getLocalizedPath('/terms', currentLang);
+const deleteAccountHref = getLocalizedPath('/delete-account', currentLang);
+
+const products = [
+  { label: t('footer.products.web'), href: 'https://word-base.pages.dev/app' },
+  { label: t('footer.products.extension'), href: '#extension' },
+  { label: t('footer.products.platforms'), href: '#platforms' },
+];
+
+const legalLinks = [
+  { label: t('footer.legal.privacy'), href: privacyHref },
+  { label: t('footer.legal.terms'), href: termsHref },
+  { label: t('footer.legal.deleteAccount'), href: deleteAccountHref },
+];
 ---
 
 <footer class="border-t mt-20 border-[var(--color-border)] bg-slate-950/50">
@@ -7,7 +35,7 @@ const year = new Date().getFullYear();
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
       <div class="col-span-2">
         <div class="flex items-center gap-3">
-          <a href="/">
+          <a href={homeHref}>
             <svg viewBox="0 0 340 128" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto">
               <defs>
                 <linearGradient id="footerBookLeft" x1="10" y1="10" x2="26" y2="54" gradientUnits="userSpaceOnUse">
@@ -37,36 +65,28 @@ const year = new Date().getFullYear();
               <text x="78" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="50" font-weight="800" fill="url(#footerTextGrad)" letter-spacing="-1.5">WordBase</text>
             </svg>
           </a>
-          <span class="text-xs ml-1 text-[var(--color-text-subtle)]">添忆：添加记忆；浏览即学习</span>
+          <span class="text-xs ml-1 text-[var(--color-text-subtle)]">{t('footer.tagline')}</span>
         </div>
       </div>
 
       <div>
         <h4 class="text-xs font-bold uppercase tracking-wider mb-4 text-slate-500">
-          产品
+          {t('footer.products')}
         </h4>
         <ul class="space-y-2.5">
-          <li>
-            <a href="https://word-base.pages.dev/app" class="text-sm transition-colors text-slate-400 hover:text-white">
-              Web 版
-            </a>
-          </li>
-          <li>
-            <a href="#extension" class="text-sm transition-colors text-slate-400 hover:text-white">
-              浏览器扩展
-            </a>
-          </li>
-          <li>
-            <a href="#platforms" class="text-sm transition-colors text-slate-400 hover:text-white">
-              多端支持
-            </a>
-          </li>
+          {products.map((p) => (
+            <li>
+              <a href={p.href} class="text-sm transition-colors text-slate-400 hover:text-white">
+                {p.label}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
 
       <div>
         <h4 class="text-xs font-bold uppercase tracking-wider mb-4 text-slate-500">
-          资源
+          {t('footer.resources')}
         </h4>
         <ul class="space-y-2.5">
           <li>
@@ -84,31 +104,23 @@ const year = new Date().getFullYear();
 
       <div>
         <h4 class="text-xs font-bold uppercase tracking-wider mb-4 text-slate-500">
-          法律
+          {t('footer.legal')}
         </h4>
         <ul class="space-y-2.5">
-          <li>
-            <a href="/privacy" class="text-sm transition-colors text-slate-400 hover:text-white">
-              隐私政策
-            </a>
-          </li>
-          <li>
-            <a href="/terms" class="text-sm transition-colors text-slate-400 hover:text-white">
-              服务条款
-            </a>
-          </li>
-          <li>
-            <a href="/delete-account" class="text-sm transition-colors text-slate-400 hover:text-white">
-              账号删除
-            </a>
-          </li>
+          {legalLinks.map((l) => (
+            <li>
+              <a href={l.href} class="text-sm transition-colors text-slate-400 hover:text-white">
+                {l.label}
+              </a>
+            </li>
+          ))}
           <li>
             <button
               type="button"
               id="analytics-preference-btn"
               class="text-sm transition-colors cursor-pointer text-slate-400 hover:text-white"
             >
-              分析偏好
+              {t('footer.legal.analyticsPref')}
             </button>
           </li>
         </ul>
@@ -116,15 +128,13 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-4 border-[var(--color-border)]">
-      <p class="text-xs text-slate-500">
-        © {year} WordBase. All rights reserved.
-      </p>
+      <p class="text-xs text-slate-500" set:html={copyright}></p>
       <div class="flex items-center gap-4">
-        <a href="/privacy" class="text-xs transition-colors text-slate-500 hover:text-slate-300">
-          隐私政策
+        <a href={privacyHref} class="text-xs transition-colors text-slate-500 hover:text-slate-300">
+          {t('footer.legal.privacy')}
         </a>
-        <a href="/terms" class="text-xs transition-colors text-slate-500 hover:text-slate-300">
-          服务条款
+        <a href={termsHref} class="text-xs transition-colors text-slate-500 hover:text-slate-300">
+          {t('footer.legal.terms')}
         </a>
       </div>
     </div>

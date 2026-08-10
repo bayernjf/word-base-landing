@@ -1,17 +1,22 @@
 ---
 import Icon from '@bay/landing-ui/components/Icon.astro';
+import { getLangFromUrl, useTranslations, type Lang } from '../i18n/utils';
 
 interface Props {
   class?: string;
+  lang?: Lang;
 }
 
-const { class: className = '' } = Astro.props;
+const { class: className = '', lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
+const ariaLabel = t('theme.toggle');
 ---
 
 <button
   id="theme-toggle"
   class={`p-2 rounded-lg transition-colors hover:bg-slate-800/60 dark:hover:bg-slate-800/60 text-[var(--color-text-muted)] hover:text-[var(--color-text)] ${className}`}
-  aria-label="切换主题"
+  aria-label={ariaLabel}
 >
   <Icon name="Sun" size={16} class="theme-icon-sun hidden" />
   <Icon name="Moon" size={16} class="theme-icon-moon" />

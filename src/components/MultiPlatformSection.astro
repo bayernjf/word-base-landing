@@ -1,23 +1,32 @@
 ---
 import Icon from '@bay/landing-ui/components/Icon.astro';
+import { getLangFromUrl, useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
 const platforms = [
-  { icon: 'Globe', name: 'Web', desc: '浏览器即开即用', color: '#818cf8', delay: '0s' },
-  { icon: 'Monitor', name: '桌面端', desc: 'macOS / Windows', color: '#c084fc', delay: '0.4s' },
-  { icon: 'Smartphone', name: '移动端', desc: 'iOS / Android', color: '#e879f9', delay: '0.8s' },
+  { icon: 'Globe', name: t('platforms.web.name'), desc: t('platforms.web.desc'), color: '#818cf8', delay: '0s' },
+  { icon: 'Monitor', name: t('platforms.desktop.name'), desc: t('platforms.desktop.desc'), color: '#c084fc', delay: '0.4s' },
+  { icon: 'Smartphone', name: t('platforms.mobile.name'), desc: t('platforms.mobile.desc'), color: '#e879f9', delay: '0.8s' },
 ];
 
 const syncFeatures = [
-  { icon: 'RefreshCw', label: '实时双向同步' },
-  { icon: 'Cloud', label: '云端备份' },
-  { icon: 'Lock', label: '本地优先 · 离线可用' },
+  { icon: 'RefreshCw', label: t('platforms.sync.realtime') },
+  { icon: 'Cloud', label: t('platforms.sync.cloud') },
+  { icon: 'Lock', label: t('platforms.sync.local') },
 ];
 
 const checklist = [
-  '浏览器扩展采集',
-  '多单词本分类管理',
-  '自定义 AI 模型',
-  '数据导入导出',
+  t('platforms.checklist.extension'),
+  t('platforms.checklist.books'),
+  t('platforms.checklist.ai'),
+  t('platforms.checklist.importExport'),
 ];
 ---
 
@@ -29,13 +38,13 @@ const checklist = [
     <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4 bg-emerald-500/10 text-emerald-300">
         <Icon name="Cloud" size={14} />
-        五端同步
+        {t('platforms.badge')}
       </div>
       <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
-        一次收藏，随处学习
+        {t('platforms.title')}
       </h2>
       <p class="mt-4 leading-relaxed text-[var(--color-text-muted)]">
-        浏览器里收藏的单词，在电脑和手机上立即可见。通勤路上用手机复习，工作时用桌面端深度学习。
+        {t('platforms.subtitle')}
       </p>
     </div>
 

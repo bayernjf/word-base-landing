@@ -1,42 +1,51 @@
 ---
 import Icon from '@bay/landing-ui/components/Icon.astro';
+import { getLangFromUrl, useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
 const features = [
   {
     icon: 'Keyboard',
     color: '#818cf8',
-    title: '默认 Ctrl 悬停即查',
-    desc: '无需选中、无需右键，默认按住 Ctrl 键鼠标悬停即可触发查词，极致流畅',
+    title: t('extension.feature.ctrlHover.title'),
+    desc: t('extension.feature.ctrlHover.desc'),
   },
   {
     icon: 'Shield',
     color: '#c084fc',
-    title: 'Shadow DOM 隔离',
-    desc: '使用 Shadow DOM 渲染悬浮弹窗，完全不污染页面样式，兼容所有网站',
+    title: t('extension.feature.shadowDom.title'),
+    desc: t('extension.feature.shadowDom.desc'),
   },
   {
     icon: 'Zap',
     color: '#f59e0b',
-    title: '即时翻译',
-    desc: '内置免费翻译源，支持接入大模型翻译引擎，支持多语言互译',
+    title: t('extension.feature.instant.title'),
+    desc: t('extension.feature.instant.desc'),
   },
   {
     icon: 'Bookmark',
     color: '#10b981',
-    title: '一键收藏',
-    desc: '保存单词的同时记录句子上下文、来源URL与页面标题，方便日后回顾',
+    title: t('extension.feature.bookmark.title'),
+    desc: t('extension.feature.bookmark.desc'),
   },
   {
     icon: 'Wifi',
     color: '#ef4444',
-    title: '离线词典',
-    desc: '内置离线英汉词典，无网络环境下也能正常查词，隐私安全无忧',
+    title: t('extension.feature.offline.title'),
+    desc: t('extension.feature.offline.desc'),
   },
   {
     icon: 'Settings',
     color: '#ec4899',
-    title: '自由配置',
-    desc: '选择添加特效、自定义触发键、悬停延迟、缓存上限，打造属于你的查词体验',
+    title: t('extension.feature.config.title'),
+    desc: t('extension.feature.config.desc'),
   },
 ];
 ---
@@ -49,15 +58,15 @@ const features = [
     <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4 bg-emerald-500/10 text-emerald-300">
         <Icon name="Download" size={14} />
-        WordPicker 浏览器扩展
+        {t('extension.badge')}
       </div>
       <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
-        浏览英文网页时，
+        {t('extension.titleLine1')}
         <br class="sm:hidden" />
-        生词不再是障碍
+        {t('extension.titleLine2')}
       </h2>
       <p class="mt-4 leading-relaxed text-[var(--color-text-muted)]">
-        安装 WordPicker 扩展后，阅读英文文档、论文、新闻时遇到生词，无需离开页面即可查词收藏。
+        {t('extension.subtitle')}
       </p>
     </div>
 
