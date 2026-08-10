@@ -1,4 +1,12 @@
 @import "tailwindcss";
+@import "@bay/landing-ui/styles/tokens.css";
+
+/* 共享令牌：word-base 品牌色（emerald）覆盖 */
+:root {
+  --lui-accent: #10b981;
+  --lui-accent-hover: #34d399;
+  --lui-accent-fg: #ffffff;
+}
 
 @source "./../**/*.astro";
 
@@ -43,11 +51,6 @@ html {
   50% { transform: translateY(-8px); }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
 @keyframes word-fly {
   0% { transform: scale(1) translate(0, 0); opacity: 1; }
   60% { transform: scale(0.6) translate(var(--fly-x), var(--fly-y)); opacity: 0.8; }
@@ -59,18 +62,8 @@ html {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 .landing-animate-float {
   animation: float 6s ease-in-out infinite;
-}
-
-.landing-animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
 }
 
 .landing-animate-fly {
@@ -82,12 +75,7 @@ html {
 }
 
 .landing-gradient-text {
-  background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #e879f9 100%);
-  background-size: 200% 200%;
-  animation: gradient-shift 5s ease infinite;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #34d399;
 }
 
 .landing-scrollbar-hide::-webkit-scrollbar {

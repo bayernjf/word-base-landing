@@ -1,5 +1,5 @@
 ---
-import Icon from './Icon.astro';
+import Icon from '@bay/landing-ui/components/Icon.astro';
 
 const steps = [
   {
@@ -126,7 +126,7 @@ const words = DEMO_PARAGRAPH.split(' ');
             })}
           </div>
           <p class="text-xs mt-3 text-[var(--color-text-subtle)]">
-            💡 提示：按住 <kbd class="px-1.5 py-0.5 rounded text-[10px] font-mono border bg-slate-800 border-slate-700 text-slate-300">Ctrl</kbd> 键后悬停带下划线的单词查看释义，点击单词直接收藏
+            💡 提示：按住 <kbd id="demo-mod-key" class="px-1.5 py-0.5 rounded text-[10px] font-mono border bg-slate-800 border-slate-700 text-slate-300">Ctrl</kbd> 键后悬停带下划线的单词查看释义，点击单词直接收藏
           </p>
         </div>
 
@@ -164,7 +164,7 @@ const words = DEMO_PARAGRAPH.split(' ');
           <p id="popup-meaning" class="text-xs leading-relaxed mb-2.5 text-[var(--color-text-muted)]"></p>
           <button
             id="popup-collect"
-            class="w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-all bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:opacity-90 active:scale-[0.98]"
+            class="w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-all bg-emerald-500 text-white hover:bg-emerald-400 active:scale-[0.98]"
           >
             <Icon name="Plus" size={12} />
             收藏到单词本
@@ -177,6 +177,8 @@ const words = DEMO_PARAGRAPH.split(' ');
 
 <script is:inline>
   (function () {
+    var isMac = /Mac|iPhone|iPad/.test(navigator.platform || '');
+    var modKey = isMac ? '⌘ Cmd' : 'Ctrl';
     var ctrlPressed = false;
     var collected = [];
     var popup = document.getElementById('demo-popup');
@@ -188,16 +190,19 @@ const words = DEMO_PARAGRAPH.split(' ');
     var wordList = document.getElementById('word-list');
     var wordCount = document.getElementById('word-count');
     var demoStatus = document.getElementById('demo-status');
+    var demoModKey = document.getElementById('demo-mod-key');
+    if (demoModKey) demoModKey.textContent = isMac ? 'Cmd' : 'Ctrl';
     var bookCard = document.getElementById('word-book');
     var activeWordEl = null;
 
     function updateStatus() {
       if (ctrlPressed) {
-        demoStatus.textContent = '🔍 查词模式已开启 — 悬停带下划线的单词';
+        demoStatus.textContent = '🔍 查词模式已开启：悬停带下划线的单词';
       } else {
-        demoStatus.textContent = '按住 Ctrl 键开始查词（点击单词也可收藏）';
+        demoStatus.textContent = '按住 ' + modKey + ' 键开始查词（点击单词也可收藏）';
       }
     }
+    updateStatus();
 
     function updateWordList() {
       wordCount.textContent = collected.length + ' 词';
@@ -226,7 +231,7 @@ const words = DEMO_PARAGRAPH.split(' ');
 
       if (collected.some(function (c) { return c.word === word.word; })) {
         popupCollect.innerHTML = '✓ 已收藏';
-        popupCollect.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-500', 'text-white', 'hover:opacity-90');
+        popupCollect.classList.remove('bg-emerald-500', 'text-white', 'hover:bg-emerald-400');
         popupCollect.classList.add('bg-emerald-500/20', 'text-emerald-400', 'cursor-default');
       } else {
         popupCollect.innerHTML = '';
@@ -242,7 +247,7 @@ const words = DEMO_PARAGRAPH.split(' ');
         icon.innerHTML = '<path d="M5 12h14"/><path d="M12 5v14"/>';
         popupCollect.appendChild(icon);
         popupCollect.appendChild(document.createTextNode(' 收藏到单词本'));
-        popupCollect.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-500', 'text-white', 'hover:opacity-90');
+        popupCollect.classList.add('bg-emerald-500', 'text-white', 'hover:bg-emerald-400');
         popupCollect.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'cursor-default');
       }
     }

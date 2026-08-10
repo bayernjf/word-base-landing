@@ -1,5 +1,5 @@
 ---
-import Icon from './Icon.astro';
+import Icon from '@bay/landing-ui/components/Icon.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
 const navLinks = [
@@ -61,6 +61,12 @@ const navLinks = [
     <div class="flex items-center gap-2">
       <ThemeToggle />
       <a
+        href="https://bayjf.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hidden text-sm transition-colors px-2 py-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text)] sm:inline-flex"
+      >BayJF</a>
+      <a
         href="https://github.com/bayernjf/word-base"
         target="_blank"
         rel="noopener noreferrer"
@@ -77,7 +83,7 @@ const navLinks = [
       </a>
       <a
         href="#cta"
-        class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all"
+        class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-emerald-500 text-white shadow-sm hover:bg-emerald-400 hover:scale-[1.02] transition-all"
       >
         免费使用
         <Icon name="ArrowRight" size={14} />
@@ -115,6 +121,14 @@ const navLinks = [
         进入 Web 版
       </a>
       <a
+        href="https://bayjf.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]"
+      >
+        BayJF
+      </a>
+      <a
         href="https://github.com/bayernjf/word-base"
         target="_blank"
         rel="noopener noreferrer"
@@ -124,7 +138,7 @@ const navLinks = [
       </a>
       <a
         href="#cta"
-        class="mobile-nav-link mt-2 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25"
+        class="mobile-nav-link mt-2 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium bg-emerald-500 text-white shadow-sm"
       >
         免费使用
         <Icon name="ArrowRight" size={14} />
@@ -169,16 +183,22 @@ const navLinks = [
       });
     });
 
-    window.addEventListener('scroll', function () {
-      if (window.scrollY > 20) {
-        nav.classList.add('shadow-lg');
-        nav.style.borderBottomColor = '';
-        nav.classList.add('border-[var(--color-border)]');
-      } else {
+    // Nav shadow toggle via a top sentinel + IntersectionObserver
+    // (no window scroll listener)
+    var navSentinel = document.createElement('div');
+    navSentinel.setAttribute('aria-hidden', 'true');
+    navSentinel.style.cssText = 'position:absolute;top:20px;height:1px;width:1px;pointer-events:none;';
+    document.body.prepend(navSentinel);
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
         nav.classList.remove('shadow-lg');
         nav.classList.remove('border-[var(--color-border)]');
         nav.classList.add('border-transparent');
+      } else {
+        nav.classList.add('shadow-lg');
+        nav.style.borderBottomColor = '';
+        nav.classList.add('border-[var(--color-border)]');
       }
-    }, { passive: true });
+    }).observe(navSentinel);
   })();
 </script>

@@ -44,11 +44,6 @@ const jsonLd = {
     price: '0',
     priceCurrency: 'USD',
   },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1280',
-  },
 };
 ---
 
@@ -66,7 +61,7 @@ const jsonLd = {
     <meta name="author" content="WordBase" />
     <meta name="theme-color" content="#0a0e1a" />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -336,5 +331,54 @@ const jsonLd = {
   <body>
     <slot />
     <AnalyticsConsentBanner />
+
+    <script is:inline>
+      (function () {
+        var links = document.querySelectorAll('.ext-download-link');
+        if (!links.length) return;
+        var FALLBACK = 'https://github.com/bayernjf/word-picker/releases';
+
+        function track(destination) {
+          if (window.wordbase && typeof window.wordbase.trackEvent === 'function') {
+            window.wordbase.trackEvent('download_click', {
+              platform: 'browser_extension',
+              destination: destination,
+            });
+          }
+        }
+
+        links.forEach(function (link) {
+          link.addEventListener('click', function () {
+            track(link.dataset.assetUrl ? 'release_asset' : 'github_releases');
+          });
+        });
+
+        fetch('https://api.github.com/repos/bayernjf/word-picker/releases', {
+          headers: { Accept: 'application/vnd.github+json' },
+        })
+          .then(function (res) { return res.json(); })
+          .then(function (releases) {
+            var latest = Array.isArray(releases) && releases.length > 0 ? releases[0] : null;
+            var assets = (latest && latest.assets) || [];
+            var chrome = null;
+            for (var i = 0; i < assets.length; i++) {
+              var name = assets[i].name || '';
+              if (name.indexOf('chrome') !== -1 && name.slice(-4) === '.zip') {
+                chrome = assets[i];
+                break;
+              }
+            }
+            if (chrome && chrome.browser_download_url) {
+              links.forEach(function (link) {
+                link.href = chrome.browser_download_url;
+                link.dataset.assetUrl = chrome.browser_download_url;
+              });
+            } else {
+              links.forEach(function (link) { link.href = FALLBACK; });
+            }
+          })
+          .catch(function () {});
+      })();
+    </script>
   </body>
 </html>
