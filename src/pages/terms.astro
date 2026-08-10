@@ -1,100 +1,7 @@
-﻿---
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '@bay/landing-ui/components/Icon.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
-
-const zhContent = {
-  title: '服务条款',
-  subtitle: '生效日期：2026 年 7 月 17 日',
-  backHome: '返回首页',
-  intro: '欢迎使用 WordBase。使用或访问 WordBase 的网站、Web 应用、桌面应用、移动应用、浏览器扩展及相关服务，即表示你已阅读、理解并同意遵守本服务条款和隐私政策。如果你不同意本条款，请勿注册或使用本服务。',
-  sections: [
-    {
-      heading: '一、服务说明',
-      paragraphs: [
-        '1. WordBase 提供单词管理、学习记录、间隔复习、多端同步以及可选的 AI 辅助学习功能。具体功能可能因平台、版本和地区而有所不同。',
-        '2. 我们可能持续改进、调整、暂停或终止部分功能。对于影响你使用的重大变更，我们会通过网站、应用内通知或其他合理方式告知。',
-        '3. 当前服务为免费提供。如未来推出付费功能，我们会在购买前明确展示价格、计费周期、退款规则及其他相关条件，并在必要时另行取得你的同意。',
-      ],
-    },
-    {
-      heading: '二、账户与资格',
-      paragraphs: [
-        '1. 你应提供真实、准确且有效的注册信息，并妥善保管账户凭据。你对通过自己账户进行的活动负责。',
-        '2. 本服务主要面向成年学习者。未满 14 周岁的用户应由监护人阅读并同意本条款及隐私政策后方可使用。',
-        '3. 如发现账户被未经授权使用、凭据泄露或其他安全问题，请立即通过本条款列明的渠道联系我们。',
-        '4. 你可以随时在应用的「账户设置」中注销账户。账户注销后，相关数据将依据隐私政策处理，且该操作通常无法撤销。',
-      ],
-    },
-    {
-      heading: '三、允许的使用与禁止行为',
-      paragraphs: [
-        '你可以在遵守法律法规和本条款的前提下，将本服务用于个人学习。你不得：',
-        '1. 利用本服务从事违法、侵权、欺诈、骚扰或危害他人安全的活动。',
-        '2. 未经授权访问、探测、干扰或破坏本服务、服务器、网络、账户或安全机制。',
-        '3. 使用自动化手段滥用接口、规避调用限制、批量抓取数据，或对服务造成不合理负载。',
-        '4. 上传恶意代码，冒充他人，侵犯知识产权、隐私权或其他合法权利。',
-        '5. 对本服务进行违法的反向工程、转售、再许可，或移除权利声明。',
-      ],
-    },
-    {
-      heading: '四、用户内容与知识产权',
-      paragraphs: [
-        '1. 你保留对自己提交的单词、语境、学习笔记及其他内容依法享有的权利。',
-        '2. 为提供同步、存储、展示和 AI 辅助功能，你授予我们一项有限的、非独占的、仅为提供和维护服务所必需的处理许可。我们不会取得你内容的所有权。',
-        '3. 你应确保提交的内容合法且拥有必要权利。因你提交的内容侵犯第三方权利而产生的责任由你依法承担。',
-        '4. WordBase 的品牌、界面设计、软件及由我们提供的原创内容受知识产权法律保护。除法律允许或获得明确授权外，不得擅自复制或商业利用。',
-      ],
-    },
-    {
-      heading: '五、AI 功能与第三方服务',
-      paragraphs: [
-        '1. AI 功能可能由你选择的第三方 AI 服务商提供。使用相关功能时，必要的单词、语境、提示词或学习内容会发送给该服务商处理，具体方式见隐私政策。',
-        '2. 如果你配置自己的 API Key，由此产生的费用、配额、服务可用性及数据处理受相应服务商条款约束。你应自行确保有权使用该 API Key。',
-        '3. AI 输出可能不准确、不完整、过时或不适合特定用途。你应自行判断和核实，不应将其作为医疗、法律、财务或其他专业建议。',
-        '4. Supabase、Cloudflare、Vercel 及你选择的 AI 服务商等第三方服务可能受其各自条款和隐私政策约束。',
-      ],
-    },
-    {
-      heading: '六、隐私与数据保护',
-      paragraphs: [
-        '我们按照《WordBase 隐私政策》收集、使用、存储和保护个人信息。隐私政策是本条款的重要组成部分。注册账户或使用涉及个人信息的功能前，请仔细阅读隐私政策。',
-      ],
-    },
-    {
-      heading: '七、服务可用性与免责声明',
-      paragraphs: [
-        '1. 我们会努力维护服务的安全和稳定，但不保证服务始终不中断、无错误或完全满足你的特定需求。维护、网络故障、第三方服务异常或不可抗力可能造成暂时不可用。',
-        '2. 在法律允许的最大范围内，本服务按「现状」和「可用」基础提供。因 AI 输出、第三方服务或用户自身设备与网络产生的风险，应由相应责任方依法承担。',
-        '3. 本条款不排除或限制依法不得排除或限制的消费者权利及法定责任。',
-      ],
-    },
-    {
-      heading: '八、暂停与终止',
-      paragraphs: [
-        '1. 如果你严重违反本条款、法律法规，危害服务安全或侵害他人权益，我们可以视情况限制、暂停或终止相关账户或功能，并在合理情况下通知你。',
-        '2. 你可以停止使用服务并注销账户。终止后，按其性质应继续有效的条款仍然有效，包括知识产权、责任限制和争议处理条款。',
-      ],
-    },
-    {
-      heading: '九、条款更新与适用法律',
-      paragraphs: [
-        '1. 我们可能因功能、业务或法律要求更新本条款。重大变更会通过网站、应用内通知或其他合理方式告知，并注明新的生效日期。',
-        '2. 在法律允许的范围内，本条款适用服务运营者所在地法律。争议应首先通过友好协商解决；协商不成的，依法向有管辖权的机构或法院处理。',
-        '3. 如果本条款的任何部分被认定无效，不影响其他条款继续有效。',
-      ],
-    },
-    {
-      heading: '十、联系我们',
-      paragraphs: [
-        '如果你对本条款、账户或服务有疑问，可以通过以下渠道联系我们：',
-        '• 应用内：前往「设置」-「意见反馈」',
-        '• GitHub：https://github.com/bayernjf/word-base/issues',
-        '我们会在收到请求后尽快处理。',
-      ],
-    },
-  ],
-};
 
 const enContent = {
   title: 'Terms of Service',
@@ -190,7 +97,7 @@ const enContent = {
 };
 ---
 
-<BaseLayout title="服务条款 - WordBase" description="WordBase 服务条款">
+<BaseLayout title="Terms of Service - WordBase" description="WordBase Terms of Service" lang="en">
   <header class="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b bg-[var(--color-nav-bg)] border-[var(--color-border)]">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <a href="/" class="flex items-center group">
@@ -219,14 +126,11 @@ const enContent = {
         </svg>
       </a>
       <div class="flex items-center gap-2">
-        <button id="lang-toggle" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors text-slate-400 hover:text-white hover:bg-slate-800/60">
-          EN
-        </button>
+        <a href="/zh/terms" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors text-slate-400 hover:text-white hover:bg-slate-800/60">中文</a>
         <ThemeToggle />
         <a href="/" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-slate-300 hover:text-white hover:bg-slate-800/60">
           <Icon name="ArrowRight" size={14} class="rotate-180" />
-          <span class="lang-zh">返回首页</span>
-          <span class="lang-en hidden">Back to Home</span>
+          Back to Home
         </a>
       </div>
     </div>
@@ -236,28 +140,14 @@ const enContent = {
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <div class="mb-8">
         <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
-          <span class="lang-zh">{zhContent.title}</span>
-          <span class="lang-en hidden">{enContent.title}</span>
+          {enContent.title}
         </h1>
         <p class="text-sm mt-2 text-[var(--color-text-muted)]">
-          <span class="lang-zh">{zhContent.subtitle}</span>
-          <span class="lang-en hidden">{enContent.subtitle}</span>
+          {enContent.subtitle}
         </p>
       </div>
 
-      <div class="lang-zh">
-        <p class="text-sm leading-relaxed text-[var(--color-text-muted)]">{zhContent.intro}</p>
-        {zhContent.sections.map((section) => (
-          <div class="mt-8">
-            <h2 class="text-lg font-bold mb-3 text-[var(--color-text)]">{section.heading}</h2>
-            <div class="text-sm leading-relaxed space-y-1.5 text-[var(--color-text-muted)]">
-              {section.paragraphs.map((p) => <p>{p}</p>)}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div class="lang-en hidden">
+      <div>
         <p class="text-sm leading-relaxed text-[var(--color-text-muted)]">{enContent.intro}</p>
         {enContent.sections.map((section) => (
           <div class="mt-8">
@@ -272,44 +162,9 @@ const enContent = {
       <div class="mt-12 sm:hidden">
         <a href="/" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium bg-slate-800/60 text-slate-300 hover:bg-slate-800">
           <Icon name="ArrowRight" size={16} class="rotate-180" />
-          <span class="lang-zh">返回首页</span>
-          <span class="lang-en hidden">Back to Home</span>
+          Back to Home
         </a>
       </div>
     </div>
   </main>
 </BaseLayout>
-
-<script is:inline>
-  (function () {
-    var toggle = document.getElementById('lang-toggle');
-    var zhElements = document.querySelectorAll('.lang-zh');
-    var enElements = document.querySelectorAll('.lang-en');
-    var currentLang = 'zh';
-
-    try {
-      var saved = localStorage.getItem('wordbase-landing-lang');
-      if (saved === 'en') {
-        currentLang = 'en';
-        zhElements.forEach(function (el) { el.classList.add('hidden'); });
-        enElements.forEach(function (el) { el.classList.remove('hidden'); });
-        toggle.textContent = '中文';
-      }
-    } catch (e) {}
-
-    toggle.addEventListener('click', function () {
-      if (currentLang === 'zh') {
-        currentLang = 'en';
-        zhElements.forEach(function (el) { el.classList.add('hidden'); });
-        enElements.forEach(function (el) { el.classList.remove('hidden'); });
-        toggle.textContent = '中文';
-      } else {
-        currentLang = 'zh';
-        zhElements.forEach(function (el) { el.classList.remove('hidden'); });
-        enElements.forEach(function (el) { el.classList.add('hidden'); });
-        toggle.textContent = 'EN';
-      }
-      try { localStorage.setItem('wordbase-landing-lang', currentLang); } catch (e) {}
-    });
-  })();
-</script>

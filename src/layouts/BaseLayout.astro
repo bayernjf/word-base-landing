@@ -7,6 +7,7 @@ interface Props {
   description: string;
   ogImage?: string;
   canonical?: string;
+  lang?: string;
 }
 
 const {
@@ -14,7 +15,10 @@ const {
   description,
   ogImage = '/preview.png',
   canonical,
+  lang = 'en',
 } = Astro.props;
+
+const ogLocale = lang === 'zh-CN' ? 'zh_CN' : 'en_US';
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://word-base-landing.pages.dev';
 const canonicalUrl = canonical ?? `${siteUrl}${Astro.url.pathname}`;
@@ -48,7 +52,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang="zh-CN" class="landing-dark">
+<html lang={lang} class="landing-dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -70,7 +74,7 @@ const jsonLd = {
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:site_name" content="WordBase" />
-    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale" content={ogLocale} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
