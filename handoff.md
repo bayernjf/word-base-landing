@@ -26,6 +26,15 @@ WordBase（浏览器背单词扩展）落地页。Astro 7 静态站点，中英�
 2. `git push`（dev 分支，推送前可先 `git pull --rebase`）。
 3. 部署后验证下载点击统计埋点、og:image、404 页面。
 
+## 落地页预览图自动化方案（2026-08-10）
+- hub 站 bayjf 的产品卡片引用本站的 `https://word-base.pages.dev/preview.png` 作为封面。
+- 本站现状：已有 `public/preview.png`（手动放置）；另需先解决域名不一致问题（见上「注意点」），
+  再建议改为方案 A 自动产出。
+- 14 个落地页均走 **Cloudflare Pages 平台自动部署**（push 即发，无部署 Action），故预览图需在
+  **构建命令内**用 Playwright 截图自动产出（方案 A），而非额外 GitHub Action。
+- 完整方案见 bayjf 仓库 `docs/PREVIEW_IMAGE_PIPELINE.md`。bayjf 自身零改动（URL 不变）。
+- 下一步：先统一正式域名，再按方案 A 改造自动截图。
+
 ## taste-skill 设计审计（2026-08-08，本地未提交）
 按 taste-skill 反 AI-slop 方法论清理设计 Tell，仅动样式与文案，
 未改动内容 IA、URL、路由和功能逻辑。
