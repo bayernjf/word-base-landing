@@ -1,27 +1,36 @@
 ---
 import Icon from '@bay/landing-ui/components/Icon.astro';
+import { getLangFromUrl, useTranslations, tRaw, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
 const steps = [
   {
     icon: 'MousePointer2',
     color: '#818cf8',
     step: '01',
-    title: '采集',
-    desc: '浏览英文网页时按住 Ctrl 悬停单词，即时弹出翻译释义',
+    title: t('workflow.step01Title'),
+    desc: t('workflow.step01Desc'),
   },
   {
     icon: 'Cloud',
     color: '#c084fc',
     step: '02',
-    title: '同步',
-    desc: '点击收藏自动同步到云端，所有设备实时更新，永不丢失',
+    title: t('workflow.step02Title'),
+    desc: t('workflow.step02Desc'),
   },
   {
     icon: 'Brain',
     color: '#e879f9',
     step: '03',
-    title: '学习',
-    desc: '在 Web/桌面/手机上通过 AI 故事、语境练习、SRS 复习掌握词汇',
+    title: t('workflow.step03Title'),
+    desc: t('workflow.step03Desc'),
   },
 ];
 
@@ -39,8 +48,19 @@ const DEMO_WORDS = [
 const DEMO_WORDS_MAP: Record<string, typeof DEMO_WORDS[0]> = {};
 DEMO_WORDS.forEach((w) => { DEMO_WORDS_MAP[w.word] = w; });
 
-// Split paragraph into words and mark interactive ones
 const words = DEMO_PARAGRAPH.split(' ');
+
+// Translations for inline script
+const i18n = {
+  statusOff: t('workflow.demoStatus.off', { mod: '{mod}' }),
+  statusOn: t('workflow.demoStatus.on'),
+  bookTitle: t('workflow.book.title'),
+  countSuffix: t('workflow.book.countSuffix', { count: '{count}' }),
+  emptyHtml: t('workflow.book.empty'),
+  collected: t('workflow.book.collected'),
+  popupCollect: t('workflow.popup.collect'),
+  popupCollected: t('workflow.popup.collected'),
+};
 ---
 
 <section id="workflow" class="px-4 sm:px-6 py-20 sm:py-28">
@@ -48,13 +68,13 @@ const words = DEMO_PARAGRAPH.split(' ');
     <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4 bg-indigo-500/10 text-indigo-300">
         <Icon name="ArrowRight" size={14} />
-        三步工作流
+        {t('workflow.badge')}
       </div>
       <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
-        从遇到生词到真正掌握
+        {t('workflow.title')}
       </h2>
       <p class="mt-4 leading-relaxed text-[var(--color-text-muted)]">
-        浏览器即点即采，云端无缝同步，AI 驱动深度学习——词汇积累从未如此顺畅。
+        {t('workflow.subtitle')}
       </p>
     </div>
 
@@ -92,9 +112,7 @@ const words = DEMO_PARAGRAPH.split(' ');
               <div class="w-2.5 h-2.5 rounded-full bg-yellow-400/70"></div>
               <div class="w-2.5 h-2.5 rounded-full bg-green-400/70"></div>
             </div>
-            <span id="demo-status" class="text-xs ml-2 text-[var(--color-text-subtle)]">
-              按住 Ctrl 键开始查词（点击单词也可收藏）
-            </span>
+            <span id="demo-status" class="text-xs ml-2 text-[var(--color-text-subtle)]"></span>
           </div>
           <div
             id="demo-paragraph"
@@ -125,9 +143,7 @@ const words = DEMO_PARAGRAPH.split(' ');
               );
             })}
           </div>
-          <p class="text-xs mt-3 text-[var(--color-text-subtle)]">
-            💡 提示：按住 <kbd id="demo-mod-key" class="px-1.5 py-0.5 rounded text-[10px] font-mono border bg-slate-800 border-slate-700 text-slate-300">Ctrl</kbd> 键后悬停带下划线的单词查看释义，点击单词直接收藏
-          </p>
+          <p class="text-xs mt-3 text-[var(--color-text-subtle)]" id="demo-hint"></p>
         </div>
 
         <div
@@ -135,18 +151,10 @@ const words = DEMO_PARAGRAPH.split(' ');
           class="lg:w-64 shrink-0 rounded-xl border p-4 bg-[var(--color-card-solid)] border-[var(--color-border)]"
         >
           <div class="flex items-center justify-between mb-3">
-            <h4 class="text-sm font-semibold text-[var(--color-text)]">📚 我的单词本</h4>
-            <span id="word-count" class="text-xs tabular-nums text-[var(--color-text-subtle)]">
-              0 词
-            </span>
+            <h4 class="text-sm font-semibold text-[var(--color-text)]" id="book-title"></h4>
+            <span id="word-count" class="text-xs tabular-nums text-[var(--color-text-subtle)]"></span>
           </div>
-          <div id="word-list" class="space-y-1.5 min-h-[120px]">
-            <p class="text-xs text-center py-8 leading-relaxed text-[var(--color-text-subtle)]">
-              还没有收藏单词
-              <br />
-              试试点击左侧带下划线的单词
-            </p>
-          </div>
+          <div id="word-list" class="space-y-1.5 min-h-[120px]"></div>
         </div>
       </div>
 
@@ -167,7 +175,7 @@ const words = DEMO_PARAGRAPH.split(' ');
             class="w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-all bg-emerald-500 text-white hover:bg-emerald-400 active:scale-[0.98]"
           >
             <Icon name="Plus" size={12} />
-            收藏到单词本
+            <span id="popup-collect-text"></span>
           </button>
         </div>
       </div>
@@ -175,10 +183,11 @@ const words = DEMO_PARAGRAPH.split(' ');
   </div>
 </section>
 
-<script is:inline>
+<script is:inline define:vars={{ i18n }}>
   (function () {
     var isMac = /Mac|iPhone|iPad/.test(navigator.platform || '');
     var modKey = isMac ? '⌘ Cmd' : 'Ctrl';
+    var modKeyShort = isMac ? 'Cmd' : 'Ctrl';
     var ctrlPressed = false;
     var collected = [];
     var popup = document.getElementById('demo-popup');
@@ -187,37 +196,44 @@ const words = DEMO_PARAGRAPH.split(' ');
     var popupPhonetic = document.getElementById('popup-phonetic');
     var popupMeaning = document.getElementById('popup-meaning');
     var popupCollect = document.getElementById('popup-collect');
+    var popupCollectText = document.getElementById('popup-collect-text');
     var wordList = document.getElementById('word-list');
     var wordCount = document.getElementById('word-count');
     var demoStatus = document.getElementById('demo-status');
-    var demoModKey = document.getElementById('demo-mod-key');
-    if (demoModKey) demoModKey.textContent = isMac ? 'Cmd' : 'Ctrl';
+    var demoHint = document.getElementById('demo-hint');
+    var bookTitle = document.getElementById('book-title');
     var bookCard = document.getElementById('word-book');
     var activeWordEl = null;
 
+    // Set static text
+    if (bookTitle) bookTitle.innerHTML = i18n.bookTitle;
+    if (demoHint) demoHint.innerHTML = i18n.statusOff.replace('{mod}', '<kbd class="px-1.5 py-0.5 rounded text-[10px] font-mono border bg-slate-800 border-slate-700 text-slate-300">' + modKeyShort + '</kbd>');
+    if (popupCollectText) popupCollectText.textContent = i18n.popupCollect;
+
     function updateStatus() {
       if (ctrlPressed) {
-        demoStatus.textContent = '🔍 查词模式已开启：悬停带下划线的单词';
+        demoStatus.textContent = i18n.statusOn;
       } else {
-        demoStatus.textContent = '按住 ' + modKey + ' 键开始查词（点击单词也可收藏）';
+        demoStatus.textContent = i18n.statusOff.replace('{mod}', modKey);
       }
     }
     updateStatus();
 
     function updateWordList() {
-      wordCount.textContent = collected.length + ' 词';
+      wordCount.textContent = i18n.countSuffix.replace('{count}', collected.length);
       if (collected.length === 0) {
-        wordList.innerHTML = '<p class="text-xs text-center py-8 leading-relaxed text-[var(--color-text-subtle)]">还没有收藏单词<br>试试点击左侧带下划线的单词</p>';
+        wordList.innerHTML = '<p class="text-xs text-center py-8 leading-relaxed text-[var(--color-text-subtle)]">' + i18n.emptyHtml + '</p>';
         return;
       }
       wordList.innerHTML = collected.map(function (w) {
         return '<div class="px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-2 landing-animate-count-up bg-slate-800/50">' +
           '<span class="font-medium truncate text-[var(--color-text)]">' + w.word + '</span>' +
           '<span class="truncate text-[10px] text-[var(--color-text-subtle)]">' + w.meaning + '</span>' +
-          '<span class="ml-auto text-emerald-400 text-[10px] shrink-0">已同步</span>' +
+          '<span class="ml-auto text-emerald-400 text-[10px] shrink-0">' + i18n.collected + '</span>' +
           '</div>';
       }).join('');
     }
+    updateWordList();
 
     function showPopup(word, x, y) {
       popupWord.textContent = word.word;
@@ -230,23 +246,11 @@ const words = DEMO_PARAGRAPH.split(' ');
       popup.classList.remove('hidden');
 
       if (collected.some(function (c) { return c.word === word.word; })) {
-        popupCollect.innerHTML = '✓ 已收藏';
+        popupCollectText.textContent = i18n.popupCollected;
         popupCollect.classList.remove('bg-emerald-500', 'text-white', 'hover:bg-emerald-400');
         popupCollect.classList.add('bg-emerald-500/20', 'text-emerald-400', 'cursor-default');
       } else {
-        popupCollect.innerHTML = '';
-        var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        icon.setAttribute('width', '12');
-        icon.setAttribute('height', '12');
-        icon.setAttribute('viewBox', '0 0 24 24');
-        icon.setAttribute('fill', 'none');
-        icon.setAttribute('stroke', 'currentColor');
-        icon.setAttribute('stroke-width', '2');
-        icon.setAttribute('stroke-linecap', 'round');
-        icon.setAttribute('stroke-linejoin', 'round');
-        icon.innerHTML = '<path d="M5 12h14"/><path d="M12 5v14"/>';
-        popupCollect.appendChild(icon);
-        popupCollect.appendChild(document.createTextNode(' 收藏到单词本'));
+        popupCollectText.textContent = i18n.popupCollect;
         popupCollect.classList.add('bg-emerald-500', 'text-white', 'hover:bg-emerald-400');
         popupCollect.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'cursor-default');
       }
@@ -326,28 +330,20 @@ const words = DEMO_PARAGRAPH.split(' ');
       });
 
       el.addEventListener('click', function (e) {
+        e.preventDefault();
         var wordData = {
           word: el.dataset.word,
           pos: el.dataset.pos,
           phonetic: el.dataset.phonetic,
           meaning: el.dataset.meaning,
         };
-        if (!collected.some(function (c) { return c.word === wordData.word; })) {
-          doCollect(wordData, el);
-        }
+        doCollect(wordData, el);
       });
     });
 
-    popupCollect.addEventListener('click', function () {
-      if (activeWordEl) {
-        var wordData = {
-          word: activeWordEl.dataset.word,
-          pos: activeWordEl.dataset.pos,
-          phonetic: activeWordEl.dataset.phonetic,
-          meaning: activeWordEl.dataset.meaning,
-        };
-        doCollect(wordData, activeWordEl);
-      }
+    document.addEventListener('click', function (e) {
+      if (popup.contains(e.target) || e.target.classList.contains('demo-word')) return;
+      if (!ctrlPressed) hidePopup();
     });
   })();
 </script>

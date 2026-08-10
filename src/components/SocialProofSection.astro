@@ -1,11 +1,20 @@
 ---
 import Icon from '@bay/landing-ui/components/Icon.astro';
+import { getLangFromUrl, useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
 const items = [
   { icon: 'Star', label: 'GitHub Stars', value: '0', id: 'stat-stars' },
   { icon: 'GitFork', label: 'Forks', value: '0', id: 'stat-forks' },
-  { icon: 'BookOpen', label: '生词本容量', value: '无限' },
-  { icon: 'Users', label: '支持平台', value: '5 端' },
+  { icon: 'BookOpen', label: t('social.bookCapacity'), value: t('social.unlimited') },
+  { icon: 'Users', label: t('social.platforms'), value: t('social.5devices') },
 ];
 ---
 

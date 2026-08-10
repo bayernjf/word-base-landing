@@ -1,33 +1,44 @@
 ---
 import Icon from '@bay/landing-ui/components/Icon.astro';
+import { getLangFromUrl, useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
 const aiFeatures = [
   {
     icon: 'Sparkles',
     color: '#818cf8',
-    title: 'AI 深度解析',
-    desc: 'AI 生成词义详解、词根词缀、记忆技巧、例句用法，让你真正理解每个词',
+    title: t('learning.feature.ai.title'),
+    desc: t('learning.feature.ai.desc'),
   },
   {
     icon: 'BookOpen',
     color: '#c084fc',
-    title: '语境故事学习',
-    desc: '自动将生词编入原创英文故事，在真实语境中理解词义和用法，告别死记硬背',
+    title: t('learning.feature.story.title'),
+    desc: t('learning.feature.story.desc'),
   },
   {
     icon: 'RotateCcw',
     color: '#10b981',
-    title: 'SRS 间隔复习',
-    desc: '基于科学的间隔重复算法，智能安排复习时间，用最少时间实现长期记忆',
+    title: t('learning.feature.srs.title'),
+    desc: t('learning.feature.srs.desc'),
   },
 ];
 
 const practiceModes = [
-  { icon: 'BookOpenCheck', label: '阅读', color: '#818cf8' },
-  { icon: 'Headphones', label: '听力', color: '#c084fc' },
-  { icon: 'MessageSquare', label: '口语', color: '#f59e0b' },
-  { icon: 'PenTool', label: '写作', color: '#ef4444' },
+  { icon: 'BookOpenCheck', label: t('learning.practice.read'), color: '#818cf8' },
+  { icon: 'Headphones', label: t('learning.practice.listen'), color: '#c084fc' },
+  { icon: 'MessageSquare', label: t('learning.practice.speak'), color: '#f59e0b' },
+  { icon: 'PenTool', label: t('learning.practice.write'), color: '#ef4444' },
 ];
+
+const practiceSuffix = t('learning.practice.suffix');
 ---
 
 <section id="learning" class="px-4 sm:px-6 py-20 sm:py-28">
@@ -35,15 +46,15 @@ const practiceModes = [
     <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4 bg-fuchsia-500/10 text-fuchsia-300">
         <Icon name="BrainCircuit" size={14} />
-        AI 学习工作台
+        {t('learning.badge')}
       </div>
       <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
-        从「认识」到「掌握」，
+        {t('learning.titleLine1')}
         <br class="sm:hidden" />
-        AI 陪你走完最后一公里
+        {t('learning.titleLine2')}
       </h2>
       <p class="mt-4 leading-relaxed text-[var(--color-text-muted)]">
-        收藏只是开始。WordBase 的 AI 学习系统帮你在语境中理解、在练习中巩固、在复习中记住。
+        {t('learning.subtitle')}
       </p>
     </div>
 
@@ -71,9 +82,9 @@ const practiceModes = [
     <div class="rounded-2xl border p-6 sm:p-8 bg-[var(--color-card-solid)] border-[var(--color-border)]">
       <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
         <div>
-          <h3 class="text-lg font-semibold mb-1 text-[var(--color-text)]">听说读写 · 四维练习</h3>
+          <h3 class="text-lg font-semibold mb-1 text-[var(--color-text)]">{t('learning.practice.title')}</h3>
           <p class="text-sm text-[var(--color-text-muted)]">
-            每个单词都可以通过四种方式强化训练，全面提升语言能力
+            {t('learning.practice.subtitle')}
           </p>
         </div>
       </div>
@@ -86,7 +97,7 @@ const practiceModes = [
             >
               <Icon name={m.icon} size={16} />
             </div>
-            <span class="text-xs font-medium text-[var(--color-text)]">{m.label}练习</span>
+            <span class="text-xs font-medium text-[var(--color-text)]">{m.label}{practiceSuffix}</span>
           </div>
         ))}
       </div>

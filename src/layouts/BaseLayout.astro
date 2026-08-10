@@ -1,13 +1,14 @@
 ---
 import '../styles/global.css';
 import AnalyticsConsentBanner from '../components/AnalyticsConsentBanner.astro';
+import { getAltLangUrl, type Lang } from '../i18n/utils';
 
 interface Props {
   title: string;
   description: string;
   ogImage?: string;
   canonical?: string;
-  lang?: string;
+  lang?: Lang;
 }
 
 const {
@@ -18,14 +19,20 @@ const {
   lang = 'en',
 } = Astro.props;
 
-const ogLocale = lang === 'zh-CN' ? 'zh_CN' : 'en_US';
+const currentLang: Lang = lang;
+const htmlLang = currentLang === 'zh' ? 'zh-CN' : 'en';
+const ogLocale = currentLang === 'zh' ? 'zh_CN' : 'en_US';
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://word-base-landing.pages.dev';
 const canonicalUrl = canonical ?? `${siteUrl}${Astro.url.pathname}`;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 
+// hreflang alternate URLs
+const altLangUrl = getAltLangUrl(Astro.url.pathname, currentLang);
+const enUrl = currentLang === 'en' ? canonicalUrl : `${siteUrl}${altLangUrl}`;
+const zhUrl = currentLang === 'zh' ? canonicalUrl : `${siteUrl}${altLangUrl}`;
+
 // Analytics IDs — support both VITE_* (legacy/shared) and PUBLIC_* (Astro) prefixes.
-// In Astro frontmatter (server-side), import.meta.env exposes all env vars.
 const gaId =
   import.meta.env.VITE_GA_MEASUREMENT_ID ||
   import.meta.env.PUBLIC_GA_MEASUREMENT_ID ||
@@ -52,7 +59,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang={lang} class="landing-dark">
+<html lang={htmlLang} class="landing-dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -60,12 +67,17 @@ const jsonLd = {
     <meta name="description" content={description} />
     <meta
       name="keywords"
-      content="英语单词学习, AI 单词应用, SRS 间隔重复, 单词记忆, WordPicker, WordBase, 词汇学习, 多端同步单词"
+      content="英语单词学习, AI 单词应用, SRS 间隔重复, 单词记忆, WordPicker, WordBase, 词汇学习, 多端同步单词, vocabulary learning, AI vocabulary, SRS spaced repetition"
     />
     <meta name="author" content="WordBase" />
     <meta name="theme-color" content="#0a0e1a" />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+
+    <!-- hreflang -->
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="zh-CN" href={zhUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -207,7 +219,6 @@ const jsonLd = {
           if (_initialized) return;
           if (typeof window === 'undefined') return;
 
-          // Skip in dev mode
           if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             _initialized = true;
             return;
@@ -308,7 +319,6 @@ const jsonLd = {
           }
         }
 
-        // Expose public API for the consent banner & other components
         window.wordbase = {
           getConsent: getConsent,
           setConsent: setConsent,
@@ -322,7 +332,6 @@ const jsonLd = {
 
         initAnalytics();
 
-        // Wire up footer "分析偏好" button
         document.addEventListener('click', function (e) {
           var btn = e.target.closest('#analytics-preference-btn');
           if (btn) {
@@ -334,7 +343,7 @@ const jsonLd = {
   </head>
   <body>
     <slot />
-    <AnalyticsConsentBanner />
+    <AnalyticsConsentBanner lang={currentLang} />
 
     <script is:inline>
       (function () {

@@ -1,8 +1,19 @@
 ---
 import Icon from '@bay/landing-ui/components/Icon.astro';
+import { getLangFromUrl, useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang } = Astro.props;
+const currentLang: Lang = lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
 const platforms = ['Mac', 'Win', 'iOS', 'Android'];
 const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
+
+const tooltipText = t('hero.tooltip.unavailable');
 ---
 
 <section id="cta" class="px-4 sm:px-6 py-20 sm:py-28">
@@ -13,12 +24,12 @@ const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
       </div>
 
       <h2 class="text-3xl sm:text-5xl font-bold tracking-tight leading-tight mb-6 text-[var(--color-text)]">
-        开始你的无痛
+        {t('cta.titleLine1')}
         <br />
-        <span class="landing-gradient-text">词汇积累之旅</span>
+        <span class="landing-gradient-text">{t('cta.titleLine2')}</span>
       </h2>
       <p class="text-base sm:text-lg mb-10 max-w-xl mx-auto text-[var(--color-text-muted)]">
-        现在安装浏览器扩展，让每一次英文阅读都成为词汇积累的机会。
+        {t('cta.subtitle')}
       </p>
       <div class="flex flex-col items-center justify-center gap-3">
         <div class="inline-flex flex-wrap items-center justify-center gap-2">
@@ -29,7 +40,7 @@ const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
             class="ext-download-link inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold bg-emerald-500 text-white shadow-sm hover:bg-emerald-400 hover:scale-[1.02] transition-all"
           >
             <Icon name="Download" size={16} />
-            安装浏览器插件
+            {t('cta.installExtension')}
           </a>
           {platforms.map((platform) => (
             <button
@@ -37,7 +48,7 @@ const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
               aria-disabled="true"
               class="unavailable-platform-btn-cta inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold transition-colors border opacity-50 cursor-not-allowed bg-slate-800/60 border-slate-700/60 text-slate-200"
             >
-              安装 {platform}
+              {t('hero.installPlatform', { platform })}
             </button>
           ))}
         </div>
@@ -46,14 +57,14 @@ const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
           class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold transition-colors border bg-slate-800/60 hover:bg-slate-800 border-slate-700/60 text-slate-200"
         >
           <Icon name="ArrowRight" size={16} />
-          打开 Web 版
+          {t('cta.openWeb')}
         </a>
       </div>
     </div>
   </div>
 </section>
 
-<script is:inline>
+<script is:inline define:vars={{ tooltipText }}>
   (function () {
     var buttons = document.querySelectorAll('.unavailable-platform-btn-cta');
     buttons.forEach(function (btn) {
@@ -65,7 +76,7 @@ const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
         tooltip = document.createElement('div');
         tooltip.setAttribute('role', 'tooltip');
         tooltip.className = 'fixed z-[100] -translate-x-full -translate-y-full whitespace-nowrap rounded-xl border px-6 py-4 text-base font-medium shadow-xl pointer-events-none border-slate-700 bg-slate-900 text-slate-100 shadow-black/30';
-        tooltip.textContent = '该平台紧急更新上架中';
+        tooltip.textContent = tooltipText;
         document.body.appendChild(tooltip);
         tooltip.style.left = x + 'px';
         tooltip.style.top = y + 'px';
