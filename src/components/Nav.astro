@@ -1,4 +1,5 @@
 ---
+import BayjfLink from '@bay/landing-ui/components/BayjfLink.astro';
 import Icon from '@bay/landing-ui/components/Icon.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import { getLangFromUrl, useTranslations, getAltLangPath, type Lang } from '../i18n/utils';
@@ -79,12 +80,7 @@ const altLangLabel = currentLang === 'zh' ? 'EN' : '中文';
         {altLangLabel}
       </a>
       <ThemeToggle lang={currentLang} />
-      <a
-        href="https://bayjf.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="hidden text-sm transition-colors px-2 py-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text)] sm:inline-flex"
-      >BayJF</a>
+      <BayjfLink size={18} class="hidden text-sm transition-colors px-2 py-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text)] sm:inline-flex" />
       <a
         href="https://github.com/bayernjf/word-base"
         target="_blank"
@@ -139,14 +135,7 @@ const altLangLabel = currentLang === 'zh' ? 'EN' : '中文';
       >
         {t('nav.webApp')}
       </a>
-      <a
-        href="https://bayjf.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]"
-      >
-        BayJF
-      </a>
+      <BayjfLink size={18} class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]" />
       <a
         href="https://github.com/bayernjf/word-base"
         target="_blank"
