@@ -1,6 +1,7 @@
 ---
 import BayjfLink from '@bay/landing-ui/components/BayjfLink.astro';
 import Icon from '@bay/landing-ui/components/Icon.astro';
+import StarOnGithub from '@bay/landing-ui/components/StarOnGithub.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import { getLangFromUrl, useTranslations, getAltLangPath, type Lang } from '../i18n/utils';
 
@@ -81,15 +82,7 @@ const altLangLabel = currentLang === 'zh' ? 'EN' : '中文';
       </a>
       <ThemeToggle lang={currentLang} />
       <BayjfLink size={18} class="hidden text-sm transition-colors px-2 py-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text)] sm:inline-flex" />
-      <a
-        href="https://github.com/bayernjf/word-base"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="p-2 rounded-lg transition-colors hidden sm:block hover:bg-slate-800/60 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-        aria-label="GitHub"
-      >
-        <Icon name="Github" size={16} />
-      </a>
+      <StarOnGithub href="https://github.com/bayernjf/word-base" size={15} class="hidden text-[var(--color-text-muted)] sm:inline-flex" />
       <a
         href="https://word-base.pages.dev/app"
         class="hidden sm:inline-flex text-sm transition-colors px-3 py-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
@@ -136,14 +129,7 @@ const altLangLabel = currentLang === 'zh' ? 'EN' : '中文';
         {t('nav.webApp')}
       </a>
       <BayjfLink size={18} class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]" />
-      <a
-        href="https://github.com/bayernjf/word-base"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="mobile-nav-link px-3 py-2.5 rounded-lg text-sm transition-colors text-[var(--color-text-muted)] hover:bg-slate-800/60 hover:text-[var(--color-text)]"
-      >
-        GitHub
-      </a>
+      <StarOnGithub href="https://github.com/bayernjf/word-base" size={15} class="mobile-nav-link text-[var(--color-text-muted)]" />
       <a
         href="#cta"
         class="mobile-nav-link mt-2 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium bg-emerald-500 text-white shadow-sm"
