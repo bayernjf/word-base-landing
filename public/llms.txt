@@ -35,4 +35,4 @@
 
 ## 详细信息
 
-完整的 AI 友好产品文档请见：https://word-base-landing.pages.dev/llms-full.txt
+完整的 AI 友好产品文档请见：https://word-base.bayjf.com/llms-full.txt
