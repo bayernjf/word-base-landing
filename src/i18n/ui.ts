@@ -31,6 +31,7 @@ export const dictionaries: Record<Lang, Dict> = {
     'hero.feature.openSource': 'Free & Open Source',
     'hero.feature.offline': 'Offline Dictionary',
     'hero.feature.sync': '5-Device Sync',
+    'hero.installPlatform': 'Download for {platform}',
     'hero.tooltip.unavailable': 'This platform is being updated',
 
     // SocialProof
@@ -213,6 +214,7 @@ export const dictionaries: Record<Lang, Dict> = {
     'hero.feature.openSource': '免费开源',
     'hero.feature.offline': '离线词典可用',
     'hero.feature.sync': '五端同步',
+    'hero.installPlatform': '下载 {platform} 版',
     'hero.tooltip.unavailable': '该平台紧急更新上架中',
 
     // SocialProof

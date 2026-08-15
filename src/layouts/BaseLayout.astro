@@ -345,53 +345,63 @@ const jsonLd = {
     <slot />
     <AnalyticsConsentBanner lang={currentLang} />
 
-    <script is:inline>
-      (function () {
-        var links = document.querySelectorAll('.ext-download-link');
-        if (!links.length) return;
-        var FALLBACK = 'https://github.com/bayernjf/word-picker/releases';
+    <script>
+      import { fetchLatestAssets, formatBytes, isSafari } from '@bay/landing-ui/lib/releases';
 
-        function track(destination) {
-          if (window.wordbase && typeof window.wordbase.trackEvent === 'function') {
-            window.wordbase.trackEvent('download_click', {
-              platform: 'browser_extension',
-              destination: destination,
-            });
-          }
+      // 浏览器扩展的产物在 word-picker 仓库，桌面/移动端在 word-base
+      const EXTENSION_REPO = 'bayernjf/word-picker';
+      const DESKTOP_REPO = 'bayernjf/word-base';
+
+      function track(platform: string, destination: string) {
+        const wb = (window as any).wordbase;
+        if (wb && typeof wb.trackEvent === 'function') {
+          wb.trackEvent('download_click', { platform, destination });
         }
+      }
 
-        links.forEach(function (link) {
-          link.addEventListener('click', function () {
-            track(link.dataset.assetUrl ? 'release_asset' : 'github_releases');
+      function wire(selector: string, platform: string) {
+        const links = document.querySelectorAll<HTMLAnchorElement>(selector);
+        links.forEach((link) => {
+          link.addEventListener('click', () => {
+            track(platform, link.dataset.assetUrl ? 'release_asset' : 'github_releases');
           });
         });
+        return links;
+      }
 
-        fetch('https://api.github.com/repos/bayernjf/word-picker/releases', {
-          headers: { Accept: 'application/vnd.github+json' },
-        })
-          .then(function (res) { return res.json(); })
-          .then(function (releases) {
-            var latest = Array.isArray(releases) && releases.length > 0 ? releases[0] : null;
-            var assets = (latest && latest.assets) || [];
-            var chrome = null;
-            for (var i = 0; i < assets.length; i++) {
-              var name = assets[i].name || '';
-              if (name.indexOf('chrome') !== -1 && name.slice(-4) === '.zip') {
-                chrome = assets[i];
-                break;
-              }
-            }
-            if (chrome && chrome.browser_download_url) {
-              links.forEach(function (link) {
-                link.href = chrome.browser_download_url;
-                link.dataset.assetUrl = chrome.browser_download_url;
-              });
-            } else {
-              links.forEach(function (link) { link.href = FALLBACK; });
-            }
-          })
-          .catch(function () {});
-      })();
+      function apply(links: NodeListOf<HTMLAnchorElement>, asset: { url: string; size: number } | null) {
+        if (!asset) return;
+        links.forEach((link) => {
+          link.href = asset.url;
+          link.dataset.assetUrl = asset.url;
+          link.title = formatBytes(asset.size);
+        });
+      }
+
+      const extLinks = wire('.ext-download-link', 'browser_extension');
+      const macLinks = wire('[data-download="mac"]', 'mac');
+      const winLinks = wire('[data-download="win"]', 'win');
+      const androidLinks = wire('[data-download="android"]', 'android');
+
+      if (extLinks.length) {
+        const { assets } = await fetchLatestAssets(EXTENSION_REPO, {
+          chrome: 'chrome.zip',
+          safari: 'safari.zip',
+        });
+        // 按钮文案是通用的“安装浏览器插件”，所以按当前浏览器给对应的包
+        apply(extLinks, (isSafari() ? assets.safari : assets.chrome) ?? assets.chrome);
+      }
+
+      if (macLinks.length || winLinks.length || androidLinks.length) {
+        const { assets } = await fetchLatestAssets(DESKTOP_REPO, {
+          mac: '.dmg',
+          win: '.exe',
+          android: '.apk',
+        });
+        apply(macLinks, assets.mac);
+        apply(winLinks, assets.win);
+        apply(androidLinks, assets.android);
+      }
     </script>
   </body>
 </html>
