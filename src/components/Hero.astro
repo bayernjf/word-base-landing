@@ -17,9 +17,18 @@ const features = [
   { label: t('hero.feature.sync') },
 ];
 
-const platforms = ['Mac', 'Win', 'iOS', 'Android'];
+// 浏览器扩展即 word-picker，产物在它自己的仓库；桌面/移动端产物在 word-base
+const extensionUrl = 'https://github.com/bayernjf/word-picker/releases';
+const desktopUrl = 'https://github.com/bayernjf/word-base/releases';
 
-const downloadUrl = 'https://github.com/bayernjf/word-picker/releases/latest';
+// Mac / Win / Android 已有 release 产物，iOS 尚未上架。href 是兜底，
+// BaseLayout 的脚本会按 key 换成最新 release 的具体资产
+const platforms = [
+  { name: 'Mac', key: 'mac', href: desktopUrl },
+  { name: 'Win', key: 'win', href: desktopUrl },
+  { name: 'iOS', key: null, href: null },
+  { name: 'Android', key: 'android', href: desktopUrl },
+];
 
 // Tooltip text for unavailable platform buttons
 const tooltipText = t('hero.tooltip.unavailable');
@@ -50,7 +59,7 @@ const tooltipText = t('hero.tooltip.unavailable');
     <div class="mt-9 flex flex-col items-center justify-center gap-3">
       <div class="inline-flex flex-wrap items-center justify-center gap-2">
         <a
-          href={downloadUrl}
+          href={extensionUrl}
           target="_blank"
           rel="noopener noreferrer"
           class="ext-download-link inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-sm font-semibold bg-emerald-500 text-white shadow-sm hover:bg-emerald-400 hover:scale-[1.02] transition-all"
@@ -58,13 +67,23 @@ const tooltipText = t('hero.tooltip.unavailable');
           {t('hero.installExtension')}
           <Icon name="ArrowRight" size={16} />
         </a>
-        {platforms.map((platform) => (
+        {platforms.map((p) => p.href ? (
+          <a
+            href={p.href}
+            data-download={p.key}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-sm font-semibold transition-colors border bg-slate-800/60 hover:bg-slate-800 border-slate-700/60 text-slate-200"
+          >
+            {t('hero.installPlatform', { platform: p.name })}
+          </a>
+        ) : (
           <button
             type="button"
             aria-disabled="true"
             class="unavailable-platform-btn inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-sm font-semibold transition-colors border opacity-50 cursor-not-allowed bg-slate-800/60 border-slate-700/60 text-slate-200"
           >
-            {t('hero.installPlatform', { platform })}
+            {t('hero.installPlatform', { platform: p.name })}
           </button>
         ))}
       </div>
