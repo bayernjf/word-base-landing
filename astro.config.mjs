@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://word-base-landing.pages.dev',
+  site: 'https://word-base.bayjf.com',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],

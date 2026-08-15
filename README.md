@@ -49,7 +49,7 @@ word-base-landing/
 
 ## 部署
 
-`astro.config.mjs` 中 `site` 配置为 `https://word-base-landing.pages.dev`,构建产物为纯静态文件(`dist/`),可直接部署到 Cloudflare Pages 或任意静态托管。
+`astro.config.mjs` 中 `site` 配置为 `https://word-base.bayjf.com`,构建产物为纯静态文件(`dist/`),可直接部署到 Cloudflare Pages 或任意静态托管。
 
 ## 共享设计包
 

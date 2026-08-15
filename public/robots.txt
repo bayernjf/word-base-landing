@@ -14,4 +14,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://word-base-landing.pages.dev/sitemap-index.xml
+Sitemap: https://word-base.bayjf.com/sitemap-index.xml

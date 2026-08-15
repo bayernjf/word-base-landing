@@ -107,6 +107,6 @@ Anki 是强大的通用 SRS 工具，但需要用户自己制作卡片或寻找�
 
 WordBase 是开源项目，采用 MIT 协议。源码托管于 GitHub，欢迎社区贡献。项目遵循 Conventional Commits 规范，提供完整的开发文档（AGENTS.md）供 AI Coding Agents 协作。
 
-- 项目主页：https://word-base-landing.pages.dev
+- 项目主页：https://word-base.bayjf.com
 - 官方文档：详见应用内帮助中心
 - 反馈渠道：通过应用内反馈入口提交
